@@ -1,18 +1,11 @@
 package bd;
 
-import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoException;
-
-import tools.DBStatic;
 import tools.Database;
 
 
@@ -94,25 +87,6 @@ public class BDService
 		return r;
 	}
 	
-	public static void addComment(int id, String text) throws MongoException, UnknownHostException
-	{
-		try
-		{
-		DB db = Database.getMongo();
-		DBCollection collec = db.getCollection("comments");
-		BasicDBObject obj = new BasicDBObject();
-		obj.put("user_id", id);
-		obj.put("text", text);
-		collec.insert(obj);
-		}
-		catch(MongoException | UnknownHostException e)
-		{
-			throw e;
-		}
-		finally
-		{
-			Database.closeMongo();
-		}
-	}
+	public static 
 }
 
