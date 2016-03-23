@@ -31,12 +31,22 @@ public class UserService
 
 	public static void insertUser(String login, String password, String nom, String prenom) throws SQLException
 	{
-		Connection co = getMySQLCo();
-		String query = "INSERT INTO users VALUES(null, `" + login + "`, `" + password + "`, `" + prenom + "`, `" + nom + "`";
-		Statement st = co.createStatement();
-		st.executeUpdate(query);
-		st.close();
-		co.close();
+		try
+		{
+			if(login == null || password == null || nom == null || prenom == null)
+				return ServicesTools.serviceRefused("Argument(s) manquant(s)", -1);
+
+			if(BDService.userExists(login))
+				return ServicesTools.serviceRefused("User déjà présent", -1);
+
+			BDService.insertUser(login, password, nom, prenom);
+		}
+		catch(BDException e)
+		{
+			return ServicesTools.serviceRefused("Erreur SQL", 1000);
+		}
+		ServicesTools.serviceAccepted();
+
 	}
 
 	public static void insertSession(String id, boolean root) throws SQLException
