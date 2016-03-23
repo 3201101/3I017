@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
-	<display-name>Lima November</display-name>
-	<description>Lima November - Projet d'application web du binôme Loglisci Nasturas.</description>
+	<display-name>Ln</display-name>
+	<description>Ln - Projet d'application web du binôme Loglisci Nasturas.</description>
 
 	<servlet>
 		<servlet-name>Index</servlet-name>
-		<servlet-class>net.ln.app.Index</servlet-class>
+		<servlet-class>ln.app.Index</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Index</servlet-name>
@@ -15,7 +15,7 @@
 
 	<servlet>
 		<servlet-name>Login</servlet-name>
-		<servlet-class>net.ln.app.Login</servlet-class>
+		<servlet-class>ln.app.Login</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Login</servlet-name>

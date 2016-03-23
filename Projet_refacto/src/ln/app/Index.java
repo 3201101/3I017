@@ -17,14 +17,13 @@ import javax.servlet.http.HttpServletResponse;
  *
  * Cette page est mappée à l'URL "/".
  */
-@WebServlet("/")
-public class Index extends App
+public class Index extends HttpServlet implements Servlet
 {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
-		request.setAttribute("title", "Index");
-		getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+		req.setAttribute("title", "Index");
+		getServletContext().getRequestDispatcher("/WEB-INF/index.jsp").forward(req, res);
 	}
 
 	@Override

@@ -16,22 +16,22 @@ import javax.servlet.http.HttpServletResponse;
  * En cas de réussite, elle redirige l'utilisateur vers la page principale de l'application, Index.
  * En cas d'échec de la connexion, un message d'erreur invitant l'utilisateur à réessayer est affiché.
  */
-@WebServlet(urlPatterns = "/login", initParams = @WebInitParam(name = "pageTitle", value = "Connexion"))
-public class Login extends App
+//@WebServlet(urlPatterns = "/login", initParams = @WebInitParam(name = "pageTitle", value = "Connexion"))
+public class Login extends HttpServlet implements Servlet
 {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
-		request.setAttribute("title", "Login");
-		getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+		req.setAttribute("title", "Login");
+		getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(req, res);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
-		if (login == 1) {
+		/*if (login == 1) {
 			// index avec params + bubblepop
-		}
+		}*/
 		//doGet(req, res);
 	}
 }

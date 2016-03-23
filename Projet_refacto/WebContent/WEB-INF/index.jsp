@@ -6,14 +6,11 @@
 </head>
 <body>
 	<header>
-		<jsp:include page="navbar.jsp">
+		<jsp:include page="inc/navbar.jsp">
 			<jsp:param name="login" value="false"/>
 		</jsp:include>
 	</header>
 	<aside>
-		<jsp:include page="sidebar.jsp">
-			<jsp:param name="login" value="false"/>
-		</jsp:include>
 	</aside>
 	<div>
 		<div id="new">
@@ -23,5 +20,7 @@
 			
 		</div>
 	</div>
+	
+	TEST
 </body>
 </html>

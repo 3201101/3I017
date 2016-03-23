@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import com.mongodb.MongoException;
 
-import bd.BDService;
+import bd.DBService;
 
 public class UserServices
 {	
@@ -19,10 +19,10 @@ public class UserServices
 			if(login == null || password == null || nom == null || prenom == null)
 				return ServicesTools.serviceRefused("Argument(s) manquant(s)", -1);
 			
-			if( BDService.userExists(login))
+			if( DBService.userExists(login))
 				return ServicesTools.serviceRefused("User déjà présent", -1);
 			
-			BDService.insertUser(login, password, nom, prenom);
+			DBService.insertUser(login, password, nom, prenom);
 			
 			return ServicesTools.serviceAccepted();
 		}
@@ -39,10 +39,10 @@ public class UserServices
 			if(login == null || password == null)
 				return ServicesTools.serviceRefused("Argument(s) manquant(s)", -1);
 			
-			int id = BDService.logInUser(login, password);
+			int id = DBService.logInUser(login, password);
 			if(id != 0)
 			{
-				int key = BDService.insertSession(id, false);
+				int key = DBService.insertSession(id, false);
 				return new JSONObject("{ 'key' : '" + key + "'}");
 			}
 			return ServicesTools.serviceRefused("Utilisateur non existant", -1);
@@ -57,7 +57,7 @@ public class UserServices
 	{
 		try
 		{
-			if(BDService.removeSession(key))
+			if(DBService.removeSession(key))
 				return ServicesTools.serviceAccepted();
 			return ServicesTools.serviceRefused("Erreur argument", 1000);
 			
@@ -70,9 +70,9 @@ public class UserServices
 	
 	public JSONObject addFriend(int follower, int followed) throws JSONException {
 		try {
-			if(BDService.getFriends(follower).contains(followed))
+			if(DBService.getFriends(follower).contains(followed))
 				return ServicesTools.serviceRefused("Amis déjà existant", -1);
-			BDService.addFriend(follower, followed);
+			DBService.addFriend(follower, followed);
 			return ServicesTools.serviceAccepted();
 		} catch (SQLException e) {
 			return ServicesTools.serviceRefused("Erreur SQL", 1000);
@@ -81,9 +81,9 @@ public class UserServices
 	
 	public JSONObject removeFriend(int follower, int followed) throws JSONException {
 		try {
-			if(!BDService.getFriends(follower).contains(followed))
+			if(!DBService.getFriends(follower).contains(followed))
 				return ServicesTools.serviceRefused("Amis non déjà existant", -1);
-			BDService.removeFriend(follower, followed);
+			DBService.removeFriend(follower, followed);
 			return ServicesTools.serviceAccepted();
 		} catch (SQLException e) {
 			return ServicesTools.serviceRefused("Erreur SQL", 1000);
@@ -92,7 +92,7 @@ public class UserServices
 	
 	public JSONObject insertComment(int id, String comm) throws JSONException {
 		try {
-			BDService.insertComment(id, comm);
+			DBService.insertComment(id, comm);
 			return ServicesTools.serviceAccepted();
 		} catch (UnknownHostException | MongoException e) {
 			return ServicesTools.serviceRefused("Erreur MongoDB", 100000);

@@ -8,5 +8,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="/users/nfs/Etu1/3201101/3I017/Projet/TME7/WebContent/WEB-INF/lib/mongo-2.7.3.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

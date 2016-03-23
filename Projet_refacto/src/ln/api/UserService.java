@@ -2,14 +2,11 @@ package ln.api;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.mysql.jdbc.Connection;
 
 import ln.db.DBService;
 
@@ -20,7 +17,14 @@ import ln.db.DBService;
  */
 public class UserService
 {
-	public static JSONObject existsUser(String login) throws SQLException, JSONException
+	/**
+	 * Teste l'existance d'un utilisateur selon son identifiant.
+	 * @param login <String> Identifiant de l'utilisateur recherché
+	 * @return <JSONObject> 
+	 * @throws SQLException
+	 * @throws JSONException
+	 */
+	public static JSONObject exists(String login) throws SQLException, JSONException
 	{
 		ArrayList<String> n = new ArrayList<String>();
 		n.add("login");
@@ -29,83 +33,113 @@ public class UserService
 		return DBService.serviceStatus(DBService.exists("users", n, v), "Utilisateur inexistant", 404);
 	}
 
-	public static void insertUser(String login, String password, String nom, String prenom) throws SQLException
-	{
-		try
-		{
-			if(login == null || password == null || nom == null || prenom == null)
-				return ServicesTools.serviceRefused("Argument(s) manquant(s)", -1);
-
-			if(BDService.userExists(login))
-				return ServicesTools.serviceRefused("User déjà présent", -1);
-
-			BDService.insertUser(login, password, nom, prenom);
-		}
-		catch(BDException e)
-		{
-			return ServicesTools.serviceRefused("Erreur SQL", 1000);
-		}
-		ServicesTools.serviceAccepted();
-
-	}
-
-	public static void insertSession(String id, boolean root) throws SQLException
-	{
-		Connection co = getMySQLCo();
-		Statement st = co.createStatement();
-		boolean r = true;
-		UUID key = UUID.randomUUID();
-		while(r)
-		{
-			String queryTest = "SELECT `key` FROM users WHERE `key` = " + key + ";";
-			ResultSet res = st.executeQuery(queryTest);
-			if(res.next())
-				key = UUID.randomUUID();
-			else
-				r = false;
-		}
-		String query = "INSERT INTO session VALUES(`" + key + "`, `" + id + "`, null, `" + root + "`, `" + false + "`";
-		st.executeUpdate(query);
-		st.close();
-		co.close();
-	}
-	
 	/**
-	 * La méthode createUser() ajoute un nouvel utilisateur à la base de données de l'application.
-	 * @param  login         Identifiant du nouvel utilisateur
-	 * @param  password      Mot de passe du nouvel utilisateur
-	 * @param  nom           Nom du nouvel utilisateur
-	 * @param  prenom        Prénom du nouvel utilisateur
-	 * @return               Code d'erreur ou de réussite sous forme d'objet JSON
-	 * @throws JSONException [description]
+	 * Ajoute un utilisateur à la base de données.
+	 * @param login <String> Identifiant de l'utilisateur 
+	 * @param password <String> Mot de passe de l'utilisateur
+	 * @param nom <String> Nom de famille de l'utilisateur
+	 * @param prenom <String> Prénom de l'utilisateur
+	 * @return
+	 * @throws JSONException
 	 */
-	public static JSONObject createUser(String login, String password, String nom, String prenom) throws JSONException
+	public static JSONObject create(String login, String password, String nom, String prenom) throws JSONException
 	{
 		try
 		{
 			if(login == null || password == null || nom == null || prenom == null)
 				return DBService.serviceRefused("Argument(s) manquant(s)", -1);
 
-			if(existsUser(login))
-				return ServicesTools.serviceRefused("User déjà présent", -1);
+			ArrayList<String> n = new ArrayList<String>();
+			n.add("login");
+			ArrayList<String> v = new ArrayList<String>();
+			v.add(login);
+			
+			if(DBService.exists("users", n, v))
+				return DBService.serviceRefused("User déjà présent", -1);
 
-			DBService.insertUser(login, password, nom, prenom);
+			n.add("password");
+			n.add("prenom");
+			n.add("nom");
+			v.add(password);
+			v.add(prenom);
+			v.add(nom);
+			
+			return DBService.serviceAccepted();
 		}
 		catch(SQLException e)
 		{
-			return ServicesTools.serviceRefused("Erreur SQL", 1000);
+			return DBService.serviceRefused("Erreur SQL", 1000);
 		}
-		
-		return ServicesTools.serviceAccepted();
+
 	}
 
-	public static JSONObject loginUser(String login, String password) throws JSONException
+	/**
+	 * Expire une session
+	 * @param id
+	 * @param root
+	 * @throws SQLException
+	 */
+	private static void expireSession(int uuid) throws SQLException
+	{
+		ArrayList<String> n = new ArrayList<String>();
+		n.add("expired");
+		ArrayList<String> v = new ArrayList<String>();
+		v.add("TRUE");
+		ArrayList<String> w = new ArrayList<String>();
+		n.add("uuid");
+		ArrayList<String> u = new ArrayList<String>();
+		u.add(Integer.toString(uuid));
+		
+		DBService.update("sessions", n, v, w, u);
+	}
+	
+	/**
+	 * Crée une nouvelle session
+	 * @param id
+	 * @param root
+	 * @return Clé de la session
+	 * @throws SQLException
+	 */
+	private static int createSession(String id, boolean root) throws SQLException
+	{
+		ArrayList<String> n = new ArrayList<String>();
+		n.add("user_id");
+		n.add("admin");
+		ArrayList<String> v = new ArrayList<String>();
+		v.add(id);
+		v.add(root ? "TRUE" : "FALSE");
+		
+		ArrayList<String> u = new ArrayList<String>();
+		u.add("uuid");
+		ArrayList<String> c = new ArrayList<String>();
+		
+		String key;
+		do
+		{
+			key = Integer.toString(UUID.randomUUID().hashCode());
+			c.clear();
+			c.add(key);
+		} while(DBService.exists("sessions", u, c));
+		
+		n.add("uuid");
+		v.add(key);
+		
+		return DBService.insert("sessions", n, v);
+	}
+
+	/**
+	 * Connecte un utilisateur.
+	 * @param login
+	 * @param password
+	 * @return
+	 * @throws JSONException
+	 */
+	public static JSONObject login(String login, String password) throws JSONException
 	{
 		try
 		{
-			int delay = 5000;
 			if(login == null || password == null)
-				return ServicesTools.serviceRefused("Arguments invalides.", -1);
+				return DBService.serviceRefused("Argument(s) manquant(s)", -1);
 
 			ArrayList<String> n = new ArrayList<String>();
 			n.add("login");
@@ -114,15 +148,42 @@ public class UserService
 			v.add(login);
 			v.add(password);
 			
-			if(DBService.exists())
+			if(DBService.exists("users", n, v))
 			{
-				//String key = sQLInsertSession(login, time);
-				//return new JSONObject("{ 'key' : '" + key + "'}");
+				ArrayList<String> s = new ArrayList<String>();
+				n.add("root");
+				
+				ResultSet r = DBService.select("users", s, n, v);
+				r.first();
+				
+				String session = Integer.toString(createSession(login, r.getBoolean(1)));
+				return new JSONObject("{ 'session' : '" + session + "'}");
 			}
+			else
+				return DBService.serviceRefused("Utilisateur inexistant.", 404);
 		}
 		catch(SQLException e)
 		{
-			return ServicesTools.serviceRefused("Erreur dans la base de données", 1000);
+			return DBService.serviceRefused("Erreur dans la base de données", 1000);
+		}
+	}
+	
+	/**
+	 * Déconnecte un utilisateur
+	 * @param uuid
+	 * @return
+	 * @throws JSONException
+	 */
+	public static JSONObject logout(int uuid) throws JSONException
+	{
+		try
+		{
+			expireSession(uuid);
+			return DBService.serviceAccepted();
+		}
+		catch(SQLException e)
+		{
+			return DBService.serviceRefused("Erreur dans la base de données", 1000);
 		}
 	}
 }

@@ -26,7 +26,7 @@ import tools.DBStatic;
 import tools.Database;
 
 
-public class BDService
+public class DBService
 {
 	public static boolean userExists(String login) throws SQLException
 	{

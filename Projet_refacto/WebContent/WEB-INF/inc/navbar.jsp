@@ -1,6 +1,4 @@
-<%
-	boolean name = (boolean)session.getAttribute("name");
-%>
+
 <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container-fluid">
 		<!-- Snippet Bootstrap pour la navigation mobile -->
