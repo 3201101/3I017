@@ -12,7 +12,7 @@
 				<div class="form-group">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox"> Limité aux amis
+							<input type="checkbox"> LimitÃ© aux amis
 						</label>
 					</div>
 				</div>
@@ -26,7 +26,7 @@
 				<select class="form-group form-control">
 					<option>Normal</option>
 					<option class="bg-info">Information</option>
-					<option class="bg-success">Nouveauté</option>
+					<option class="bg-success">NouveautÃ©</option>
 					<option class="bg-warning">Maintenance</option>
 					<option class="bg-danger">Panne</option>
 				</select>
@@ -39,7 +39,7 @@
 
 <script type="text/javascript">
 	
-	// Rendu esthétique
+	// Rendu esthï¿½tique
 
 	$('#new_options').on('show.bs.collapse', function () {
 		$('#new_options_button').text("Moins d'options");

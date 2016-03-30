@@ -11,7 +11,7 @@
 			<jsp:include page="inc/navbar.jsp"/>
 		</header>
 		<aside class="col-lg-3 col-lg-offset-2 col-md-5" id="sidebar">
-			<%-- Barre latérle --%>
+			<%-- Barre latÃ©rle --%>
 			<jsp:include page="inc/sidebar.jsp"/>
 		</aside>
 		<main class="col-lg-5 col-md-7" id="flux">

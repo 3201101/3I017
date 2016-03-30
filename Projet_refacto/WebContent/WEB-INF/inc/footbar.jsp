@@ -7,9 +7,9 @@
 
 		<!-- Contenu de la barre de navigation -->
 		<div class="collapse navbar-collapse" id="navbar-collapse">
-			<p class="navbar-text">Projet étudiant de développement web</p>
+			<p class="navbar-text">Projet Ã©tudiant de dÃ©veloppement web</p>
 			<p class="navbar-text navbar-right"><a href="${ app.path }/api" class="navbar-link">Documentation API</a></p>
-			<p class="navbar-text navbar-right"><a href="https://github.com/3201101/3I017" class="navbar-link">Dépôt GitHub</a></p>
+			<p class="navbar-text navbar-right"><a href="https://github.com/3201101/3I017" class="navbar-link">DÃ©pÃ©t GitHub</a></p>
 		</div>
 	</div>
 </nav>
