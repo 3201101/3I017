@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="/users/nfs/Etu1/3201101/3I017/Projet/TME7/WebContent/WEB-INF/lib/mongo-2.7.3.jar"/>
+	<classpathentry kind="lib" path="/home/anti/Téléchargements/Firefox/mongo-2.7.3.jar"/>
+	<classpathentry kind="lib" path="/home/anti/Téléchargements/bson-3.0.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

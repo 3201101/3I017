@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,8 +18,70 @@ import ln.db.DBService;
  *
  * Ce service permet la gestion des utilisateurs de l'application.
  */
-public class UserService
+public class UsersService extends AbstractService
 {
+	/**
+	 * Récupère un utilisateur par son nom
+	 * @param login <String> Identifiant de l'utilisateur recherché
+	 * @return <JSONObject> 
+	 * @throws SQLException
+	 * @throws JSONException
+	 */
+	public static JSONObject get(String login) throws SQLException, JSONException
+	{
+		ArrayList<String> n = new ArrayList<String>();
+		n.add("login");
+		ArrayList<String> v = new ArrayList<String>();
+		v.add(login);
+		ResultSet r = DBService.select("users", new ArrayList<String>(), n, v);
+		boolean b = true;
+		JSONObject j = new JSONObject();
+		
+		while(r.next())
+		{
+			b = false;
+			j.put("_id", r.getInt("id"));
+			j.put("username", r.getString("username"));
+			j.put("nom", r.getString("nom"));
+			j.put("prenom", r.getString("prenom"));
+			j.put("admin", r.getBoolean("admin"));
+		}
+		
+		if(b == true)
+			return serviceRefused("Utilisateur inexistant", 404);
+		else
+			return j;
+	}
+	
+	/**
+	 * Récupère tous les utilisateurs
+	 * @param login <String> Identifiant de l'utilisateur recherché
+	 * @return <JSONObject> 
+	 * @throws SQLException
+	 * @throws JSONException
+	 */
+	public static JSONObject get() throws SQLException, JSONException
+	{
+		ResultSet r = DBService.select("users");
+		JSONObject o = new JSONObject();
+		JSONArray a = new JSONArray();
+		
+		
+		while(r.next())
+		{
+			JSONObject j = new JSONObject();
+			j.put("_id", r.getInt("id"));
+			j.put("username", r.getString("username"));
+			j.put("nom", r.getString("nom"));
+			j.put("prenom", r.getString("prenom"));
+			j.put("admin", r.getBoolean("admin"));
+			a.put(r.getInt("id"), j);
+		}
+		
+		o.put("users", a);
+		return o;
+	}
+	
 	/**
 	 * Teste l'existance d'un utilisateur selon son identifiant.
 	 * @param login <String> Identifiant de l'utilisateur recherché
@@ -30,7 +95,7 @@ public class UserService
 		n.add("login");
 		ArrayList<String> v = new ArrayList<String>();
 		v.add(login);
-		return DBService.serviceStatus(DBService.exists("users", n, v), "Utilisateur inexistant", 404);
+		return serviceStatus(DBService.exists("users", n, v), "Utilisateur inexistant", 404);
 	}
 
 	/**
@@ -47,7 +112,7 @@ public class UserService
 		try
 		{
 			if(login == null || password == null || nom == null || prenom == null)
-				return DBService.serviceRefused("Argument(s) manquant(s)", -1);
+				return serviceRefused("Argument(s) manquant(s)", -1);
 
 			ArrayList<String> n = new ArrayList<String>();
 			n.add("login");
@@ -55,7 +120,7 @@ public class UserService
 			v.add(login);
 			
 			if(DBService.exists("users", n, v))
-				return DBService.serviceRefused("User déjà présent", -1);
+				return serviceRefused("User déjà présent", -1);
 
 			n.add("password");
 			n.add("prenom");
@@ -64,11 +129,11 @@ public class UserService
 			v.add(prenom);
 			v.add(nom);
 			
-			return DBService.serviceAccepted();
+			return serviceAccepted();
 		}
 		catch(SQLException e)
 		{
-			return DBService.serviceRefused("Erreur SQL", 1000);
+			return serviceRefused("Erreur SQL", 1000);
 		}
 
 	}
@@ -139,7 +204,7 @@ public class UserService
 		try
 		{
 			if(login == null || password == null)
-				return DBService.serviceRefused("Argument(s) manquant(s)", -1);
+				return serviceRefused("Argument(s) manquant(s)", -1);
 
 			ArrayList<String> n = new ArrayList<String>();
 			n.add("login");
@@ -160,11 +225,11 @@ public class UserService
 				return new JSONObject("{ 'session' : '" + session + "'}");
 			}
 			else
-				return DBService.serviceRefused("Utilisateur inexistant.", 404);
+				return serviceRefused("Utilisateur inexistant.", 404);
 		}
 		catch(SQLException e)
 		{
-			return DBService.serviceRefused("Erreur dans la base de données", 1000);
+			return serviceRefused("Erreur dans la base de données", 1000);
 		}
 	}
 	
@@ -179,11 +244,11 @@ public class UserService
 		try
 		{
 			expireSession(uuid);
-			return DBService.serviceAccepted();
+			return serviceAccepted();
 		}
 		catch(SQLException e)
 		{
-			return DBService.serviceRefused("Erreur dans la base de données", 1000);
+			return serviceRefused("Erreur dans la base de données", 1000);
 		}
 	}
 }

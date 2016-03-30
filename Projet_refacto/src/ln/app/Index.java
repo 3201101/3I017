@@ -19,10 +19,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class Index extends HttpServlet implements Servlet
 {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
-		req.setAttribute("title", "Index");
+		req.setAttribute("app", new AppSettings());
+		req.setAttribute("page", new PageSettings("", "Accueil", "Accueil"));
 		getServletContext().getRequestDispatcher("/WEB-INF/index.jsp").forward(req, res);
 	}
 

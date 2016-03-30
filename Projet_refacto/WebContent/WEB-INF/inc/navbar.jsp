@@ -1,7 +1,6 @@
-
 <nav class="navbar navbar-default navbar-fixed-top">
-	<div class="container-fluid">
-		<!-- Snippet Bootstrap pour la navigation mobile -->
+	<div class="container-fluid col-md-8 col-md-offset-2">
+		<%-- Snippet Bootstrap pour la navigation mobile --%>
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
 				<span class="sr-only">Toggle navigation</span>
@@ -9,30 +8,34 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<!-- Titre affichÃ© sur la barre de navigation -->
-			<a class="navbar-brand" href="#"><!-- TODO TITLE -->Lima November</a>
+			<%-- Titre affiché sur la barre de navigation --%>
+			<a class="navbar-brand" href="#">${ app.name }</a>
 		</div>
 
-		<!-- Contenu de la barre de navigation -->
+		<%-- Contenu de la barre de navigation --%>
 		<div class="collapse navbar-collapse" id="navbar-collapse">
-			<!-- Champ de recherche -->
-			<form class="navbar-form navbar-left" role="search">
-				<div class="form-group">
-					<input type="text" class="form-control" placeholder="Search">
-				</div>
-				<button type="submit" class="btn btn-default btn">Submit</button>
-			</form>
-
-			<!-- Liens pour l'affichage des posts -->
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="index">Flux global</a></li>
-				<li><a href="friends">Posts d'amis</a></li>
+		
+			<%-- Liens pour l'affichage des posts --%>
+			<ul class="nav navbar-nav">
+				<%-- TODO Conditionner l'active --%>
+				<li class="active"><a href="${ app.path }/accueil">Accueil</a></li>
+				<li><a href="${ app.path }/amis">Amis</a></li>
+				<li><a href="${ app.path }/annonces">Annonces</a></li>
 			</ul>
 
-			<!-- Liens pour la connexion/profil -->
+			<%-- Partie droite de la barre de navigation --%>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="login">Connexion</a></li>
-				<li><a href="join">Inscription</a></li>
+				<%-- TODO Champ de recherche --%>
+				<li>
+					<form class="navbar-form navbar-right" role="search">
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Recherche">
+						</div>
+						<button type="submit" class="btn btn-default btn"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+					</form>
+				</li>
+				<%-- TODO Connexion ou profil --%>
+				<li><a href="join">Connexion</a></li>
 			</ul>
 		</div>
 	</div>

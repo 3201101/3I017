@@ -19,9 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 //@WebServlet(urlPatterns = "/login", initParams = @WebInitParam(name = "pageTitle", value = "Connexion"))
 public class Login extends HttpServlet implements Servlet
 {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
+		req.setAttribute("app", new AppSettings());
 		req.setAttribute("title", "Login");
 		getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(req, res);
 	}

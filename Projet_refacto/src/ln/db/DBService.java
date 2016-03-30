@@ -1,22 +1,19 @@
 package ln.db;
 
 import java.net.UnknownHostException;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Collection;
-import java.util.UUID;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.Iterator;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
@@ -33,7 +30,9 @@ import com.mysql.jdbc.Connection;
  */
 public class DBService
 {
-	//private static Database database;
+	/**
+	 * Méthodes liées à la manipulation de bases de données MySQL
+	 */
 
 	/**
 	 * La méthode getMySQLCo() retourne un objet Connection lié à la base de données MySQL de l'application.
@@ -58,47 +57,6 @@ public class DBService
 		{
 			return (Connection) DriverManager.getConnection("jdbc:mysql://" + DBSettings.db_host + "/" + DBSettings.db_name, DBSettings.db_user, DBSettings.db_pass);
 		}
-	}
-
-	/**
-	 * La méthode getMongo() retourne un objet Mongo représentant la base de données MongoDB de l'application.
-	 * @return Objet Mongo
-	 * @throws MongoException 
-	 * @throws UnknownHostException 
-	 */	
-	private static DB getMongo() throws UnknownHostException, MongoException
-	{
-		return new Mongo(DBSettings.db_host, DBSettings.db_mongo_port).getDB(DBSettings.db_name);
-	}
-
-	/**
-	 * La méthode getMongoCo() retourne la Collection MongoDB dont le nom est passé en paramètre.
-	 * @param  table Nom de la Collection voulue
-	 * @return       Objet Collection
-	 * @throws MongoException 
-	 * @throws UnknownHostException 
-	 */
-	private static DBCollection getMongoCo(String table) throws UnknownHostException, MongoException
-	{
-		return getMongo().getCollection(table);
-	}
-
-	public static JSONObject serviceRefused(String message, int codeErreur) throws JSONException
-	{
-		return new JSONObject("{'Erreur' : "+ codeErreur +", 'Message :' : '" + message + "'}");
-	}
-	
-	public static JSONObject serviceAccepted() throws JSONException
-	{
-		return new JSONObject("{'OK' : 'OK'}");
-	}
-	
-	public static JSONObject serviceStatus(boolean status, String message, int codeErreur) throws JSONException
-	{
-		if(status)
-			return serviceAccepted();
-		else
-			return serviceRefused(message, codeErreur);
 	}
 
 	/**
@@ -300,4 +258,43 @@ public class DBService
 		return r;
 	}
 
+	/**
+	 * Méthodes liées à la manipulation de bases de données MongoDB
+	 */
+
+	/**
+	 * La méthode getMongo() retourne un objet Mongo représentant la base de données MongoDB de l'application.
+	 * @return Objet Mongo
+	 * @throws MongoException 
+	 * @throws UnknownHostException 
+	 */	
+	private static DB getMongo() throws UnknownHostException, MongoException
+	{
+		return new Mongo(DBSettings.db_host, DBSettings.db_mongo_port).getDB(DBSettings.db_name);
+	}
+
+	/**
+	 * La méthode getMongoCo() retourne la Collection MongoDB dont le nom est passé en paramètre.
+	 * @param  table Nom de la Collection voulue
+	 * @return       Objet Collection
+	 * @throws MongoException 
+	 * @throws UnknownHostException 
+	 */
+	private static DBCollection getMongoCo(String table) throws UnknownHostException, MongoException
+	{
+		return getMongo().getCollection(table);
+	}
+
+	/**
+	 * Ajoute un nouveau document dans une table de la base de données MongoDB.
+	 * @param table Collection à modifier
+	 * @param o BasicDBObject à insérer
+	 * @return True si l'ajout est réussi
+	 * @throws MongoException
+	 * @throws UnknownHostException
+	 */
+	public static boolean add(String table, BasicDBObject o) throws MongoException, UnknownHostException
+	{
+		return getMongoCo(table).insert(o).getN() == 1;
+	}
 }

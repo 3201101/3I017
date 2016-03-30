@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
-	<display-name>Ln</display-name>
-	<description>Ln - Projet d'application web du binôme Loglisci Nasturas.</description>
+	<display-name>Ln - Log À Rythmes</display-name>
+	<description>Ln - Log À Rythmes - Projet d'application web du binôme Loglisci Nasturas.</description>
 
 	<servlet>
 		<servlet-name>Index</servlet-name>
@@ -10,7 +9,15 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Index</servlet-name>
-		<url-pattern>/</url-pattern>
+		<url-pattern></url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Index</servlet-name>
+		<url-pattern>/accueil</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Index</servlet-name>
+		<url-pattern>/index</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
@@ -20,5 +27,18 @@
 	<servlet-mapping>
 		<servlet-name>Login</servlet-name>
 		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>API</servlet-name>
+		<servlet-class>ln.app.API</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>API</servlet-name>
+		<url-pattern>/api</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>API</servlet-name>
+		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 </web-app>

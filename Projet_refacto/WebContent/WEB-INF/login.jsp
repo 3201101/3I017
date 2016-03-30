@@ -2,18 +2,18 @@
 	<form class="form-horizontal" action="" method="post">
 		<div class="errors">
 	    	<div class="form-group alert alert-danger center" role="alert">
-	    		<strong>Erreur de connexion.</strong>
+	    		<strong></strong>
 	    	</div>
 	    </div>
 
 		<input type="hidden" name="_csrf_token" value="" />
 
 		<div class="form-group">
-		    <input class="form-control input-lg center" type="text" id="username" name="_username" value="" required="required" placeholder="Identifiant" />
+		    <input class="form-control input-lg center" type="text" id="username" name="username" value="" required="required" placeholder="Identifiant" />
 		</div>
 
 		<div class="form-group">
-		    <input class="form-control input-lg center" type="password" id="password" name="_password" required="required" placeholder="Mot de passe" />
+		    <input class="form-control input-lg center" type="password" id="password" name="password" required="required" placeholder="Mot de passe" />
 		</div>
 
 		<div class="form-group">
