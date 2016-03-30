@@ -55,7 +55,7 @@ public class DBService
 		}
 		else
 		{
-			return (Connection) DriverManager.getConnection("jdbc:mysql://" + DBSettings.db_host + "/" + DBSettings.db_name, DBSettings.db_user, DBSettings.db_pass);
+			return (Connection) DriverManager.getConnection("jdbc:mysql://" + DBSettings.db_host + ":" + DBSettings.db_mysql_port + "/" + DBSettings.db_name, DBSettings.db_user, DBSettings.db_pass);
 		}
 	}
 
@@ -147,8 +147,7 @@ public class DBService
 
 		Statement st = co.createStatement();
 		ResultSet r = st.executeQuery(query);
-		co.close();
-
+		
 		return r;
 	}
 
@@ -170,9 +169,6 @@ public class DBService
 
 		if(r.next())
 			b = true;
-
-		// Fermeture du Statement et du ResultSet
-		r.getStatement().close();
 
 		return b;
 	}
@@ -209,7 +205,6 @@ public class DBService
 		
 		Statement st = co.createStatement();
 		int r = st.executeUpdate(query);
-		co.close();
 
 		return r;
 	}
@@ -253,7 +248,6 @@ public class DBService
 		
 		Statement st = co.createStatement();
 		int r = st.executeUpdate(query);
-		co.close();
 
 		return r;
 	}

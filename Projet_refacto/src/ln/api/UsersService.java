@@ -37,15 +37,17 @@ public class UsersService extends AbstractService
 		boolean b = true;
 		JSONObject j = new JSONObject();
 		
-		while(r.next())
+		if(r.next())
 		{
 			b = false;
 			j.put("_id", r.getInt("id"));
-			j.put("username", r.getString("username"));
+			j.put("username", r.getString("login"));
 			j.put("nom", r.getString("nom"));
 			j.put("prenom", r.getString("prenom"));
-			j.put("admin", r.getBoolean("admin"));
+			j.put("admin", r.getBoolean("root"));
 		}
+		
+		r.close();
 		
 		if(b == true)
 			return serviceRefused("Utilisateur inexistant", 404);
@@ -66,19 +68,21 @@ public class UsersService extends AbstractService
 		JSONObject o = new JSONObject();
 		JSONArray a = new JSONArray();
 		
-		
 		while(r.next())
 		{
 			JSONObject j = new JSONObject();
 			j.put("_id", r.getInt("id"));
-			j.put("username", r.getString("username"));
+			
+			j.put("username", r.getString("login"));
 			j.put("nom", r.getString("nom"));
 			j.put("prenom", r.getString("prenom"));
-			j.put("admin", r.getBoolean("admin"));
-			a.put(r.getInt("id"), j);
+			j.put("admin", r.getBoolean("root"));
+			a.put(j);
 		}
 		
+		r.close();
 		o.put("users", a);
+		
 		return o;
 	}
 	

@@ -46,20 +46,22 @@ public class API extends HttpServlet implements Servlet
 	    		try
 	    		{
 		    		JSONObject o;
+		    		res.setContentType("application/json");
+		    		PrintWriter out = res.getWriter();
+		    		
 		    		/* Sélection API */
 		    		switch (gets[0])
 		    		{
 		    			case "users":
-		    				o = UsersService.get();
+		    				if(gets.length == 2)
+		    					out.print(UsersService.get(gets[1]));
+		    				else
+		    					out.print(UsersService.get());
 		    				break;
 		    				
 		    			default:
-		    				o = AbstractService.serviceRefused("Bad Request (DEBUG switch " + gets[0] + ")", 400);
+		    				out.print(AbstractService.serviceRefused("Bad Request (DEBUG switch " + gets[0] + ")", 400));
 		    		}
-		    		
-		    	    res.setContentType("application/json");
-		    		PrintWriter out = res.getWriter();
-		    		out.print(o);
 	    		}
 	    		catch(SQLException e)
 	    		{
