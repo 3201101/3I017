@@ -77,7 +77,7 @@ public class API extends HttpServlet implements Servlet
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		/* Récupération du path GET */
-		String path = req.getRequestURL().toString().replaceAll(".*/api", "");
+		String path = req.getRequestURL().toString().replaceAll(".*/api", "").replaceAll("?*", "");
 		
 		try
 		{
@@ -104,6 +104,10 @@ public class API extends HttpServlet implements Servlet
 
 		    			case "/users":
 		    				out.print(UsersService.get());
+		    				break;
+		    				
+		    			case "/login":
+		    				out.print(UsersService.login(req.getParameter("username"), req.getParameter("password")));
 		    				break;
 
 		    			case "/messages":
