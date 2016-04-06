@@ -1,7 +1,7 @@
 <div class="panel panel-primary" id="profile">
 	<div class="panel-heading">
 		<a data-toggle="collapse" href="#profile_body" aria-expanded="true" aria-controls="profile_body">
-			À propos <span class="pull-right glyphicon glyphicon-minus" aria-hidden="true" id="profile_body_button"></span>
+			À propos <span class="pull-right glyphicon glyphicon-plus" aria-hidden="true" id="profile_body_button"></span>
 		</a>
 	</div>
 	<div class="panel-body collapse text-center" id="profile_body">

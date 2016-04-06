@@ -16,11 +16,10 @@ import javax.sql.DataSource;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import com.mysql.jdbc.Connection;
-
-
 
 
 /**
@@ -55,6 +54,15 @@ public class DBService
 		}
 		else
 		{
+			try 
+			{
+				Class.forName("com.mysql.jdbc.Driver");
+			}
+			catch (ClassNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
 			return (Connection) DriverManager.getConnection("jdbc:mysql://" + DBSettings.db_host + ":" + DBSettings.db_mysql_port + "/" + DBSettings.db_name, DBSettings.db_user, DBSettings.db_pass);
 		}
 	}
@@ -278,6 +286,19 @@ public class DBService
 	{
 		return getMongo().getCollection(table);
 	}
+	
+	/**
+	 * Recherche un document dans une table de la base de données MongoDB.
+	 * @param table Collecgtion visée par la recherche 
+	 * @param o BasicDBObject contenant les critères de recherche
+	 * @return DBCursor Curseur pointant sur les résultats de la recherche
+	 * @throws MongoException
+	 * @throws UnknownHostException
+	 */
+	public static DBCursor find(String table, BasicDBObject o) throws MongoException, UnknownHostException
+	{
+		return getMongoCo(table).find(o);
+	}
 
 	/**
 	 * Ajoute un nouveau document dans une table de la base de données MongoDB.
@@ -291,4 +312,6 @@ public class DBService
 	{
 		return getMongoCo(table).insert(o).getN() == 1;
 	}
+	
+	
 }

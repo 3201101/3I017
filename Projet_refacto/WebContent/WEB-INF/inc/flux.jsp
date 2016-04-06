@@ -1,22 +1,20 @@
 <article class="message panel panel-primary flux"/>
 	<div class="panel-heading">
-		Flux d'informations
+		<a href="#">
+			Flux d'informations <span class="pull-right glyphicon glyphicon-refresh"></span>
+		</a>
 	</div>
-	<ul class="list-group">
-		<%-- TODO à boucler et paramétrer --%>
-		<jsp:include page="message.jsp"/>
-		<jsp:include page="message.jsp"/>
-		<jsp:include page="message.jsp"/>
-		<jsp:include page="message.jsp"/>
-		<jsp:include page="message.jsp"/>
-		<jsp:include page="message.jsp"/>
-		<jsp:include page="message.jsp"/>
-		<jsp:include page="message.jsp"/>
-		<jsp:include page="message.jsp"/>
-		<jsp:include page="message.jsp"/>
-		<%--	<jsp:param name="message_type" value="default"/>
-		</jsp:include>--%>
+	<ul class="list-group" id="flux">
 	</ul>
+	<script>
+		$(function(){
+			$.getJSON("http://li328.lip6.fr:8280/0ln/api/messages", function(r) {
+				$.each(r.doc, function(i, m) {
+					$("#flux").append();
+				});
+			});
+		});
+	</script>
 	<div class="panel-footer">
 		<a class="btn btn-link btn-block">Afficher plus d'informations</a>
 	</div>

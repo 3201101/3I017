@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
 	<div class="container-fluid col-md-8 col-md-offset-2">
 		<%-- Snippet Bootstrap pour la navigation mobile --%>
 		<div class="navbar-header">
@@ -35,8 +35,8 @@
 					</form>
 				</li>
 				<%-- TODO Connexion ou profil --%>
-				<%-- <li><a href="join">Connexion</a></li> --%>
-				<li>
+				<li><a href="join">Connexion</a></li>
+				<%--<li>
 					<form class="navbar-form navbar-right" onsubmit="login()">
 						<div class="form-group">
 							<input type="text" class="form-control" placeholder="Login">
@@ -46,7 +46,7 @@
 						</div>
 						<button type="submit" class="btn btn-default btn">Connecter</button>
 					</form>
-				</li>
+				</li>--%>
 			</ul>
 		</div>
 	</div>

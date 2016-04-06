@@ -64,3 +64,16 @@ footer
 {
 	margin-top: 5px;
 }
+
+
+/* API DOC */
+
+#doc h4 a:hover
+{
+	text-decoration: none;
+}
+
+#doc h4 a
+{
+	font-weight: bold;
+}

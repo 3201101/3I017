@@ -21,7 +21,7 @@ public class AbstractService
 	 */
 	public static JSONObject serviceRefused(String message, int codeErreur) throws JSONException
 	{
-		return new JSONObject("{'Erreur' : "+ codeErreur +", 'Message :' : '" + message + "'}");
+		return new JSONObject().put("Erreur", codeErreur).put("Message", message);
 	}
 	
 	/**
