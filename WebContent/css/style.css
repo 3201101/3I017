@@ -1,0 +1,81 @@
+
+/**
+ * Feuille de style de l'application web
+ *
+ * Cette feuille réécrit certains styles proposés par Bootstrap.
+ */
+
+
+/* Fix Bootstrap Navbar */
+
+body
+{
+	padding-top: 50px;
+	padding-bottom: 50px;
+	min-height: 1vh;
+}
+
+
+/* Apparence générale */
+
+body
+{
+	background-color: #70DADA;
+	background: url(wallpaper.jpg) no-repeat center fixed; 
+  	-webkit-background-size: cover; /* pour Chrome et Safari */
+	-moz-background-size: cover; /* pour Firefox */
+	-o-background-size: cover; /* pour Opera */ 
+  	background-size: cover;
+}
+
+section, article, footer
+{
+	margin-top: 30px;
+}
+
+footer
+{
+	bottom: 0;
+	padding: 0;
+	width: 100%;
+	border-radius: 0;
+}
+
+
+/* Blocs */
+
+.panel-heading > a
+{
+	color: #fff;
+}
+
+.panel-heading > a > span
+{
+	font-size: 20px;
+}
+
+
+/* Messages */
+
+.list-group .media
+{
+	margin-top: 0;
+}
+
+.list-group .media .media-left a img
+{
+	margin-top: 5px;
+}
+
+
+/* API DOC */
+
+#doc h4 a:hover
+{
+	text-decoration: none;
+}
+
+#doc h4 a
+{
+	font-weight: bold;
+}

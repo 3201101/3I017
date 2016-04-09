@@ -1,0 +1,17 @@
+package ln.db;
+
+/**
+ * DBSettings
+ *
+ * Contient les informations de connexion aux bases de données.
+ */
+public final class DBSettings
+{
+    public static final String db_host = /* Adresse du serveur */;
+    public static final String db_name = /* Nom de la base */;
+    public static final String db_user = /* Utilisateur */;
+    public static final String db_pass = /* Mot de passe */;
+    public static final int db_mongo_port = /* Port du serveur Mongo */;
+    public static final int db_mysql_port = /* Port du serveur MySQL */;
+    public static final boolean db_mysql_pooling = /* Option pour le matient des connexions par Java */;
+}

@@ -1,14 +1,24 @@
 
-# 3I017 - Technologies du Web
+# Ln - Log à Rythmes
 
-Dépôt étudiant pour le cours de 3I017 - Technologies du Web.
+Log à Rythmes est un projet d'application web de type micro-blogging, développé en 2016 par Benjamin Loglisci et André Nasturas, dans le cadre du cours [3i017 Technologies du Web](http://www-licence.ufr-info-p6.jussieu.fr/lmd/licence//public/espace_public/offres_formation/descr_ue.php?code_ue=3I017) de l'UPMC.
 
-## Présentation du dépôt
+## Installation
 
-Ce dépôt Git regroupe les ressources proposées par le corps enseignant ainsi que les devoirs et projets effectués par l'étudiant dans le cadre de l'unité d'enseignement.
+Cette application a été développé en Java, et requiert un serveur TOMCAT, une base de données MySQL et une base de données MongoDB.
 
-## Présentation de l'UE
+1. Clonez le dépôt : ```git clone git://github.com/3201101/3I017.git```.
+2. Complétez la classe **ln.db.DBSettings.java** dans le dossier _src/ln_ avec les identifiants de vos bases de données.
+3. Modifiez éventuellement les fichiers **ln.app.AppSettings** et **style.css** respectivement dans les dossiers _src/ln_ et _WebContent/css_ à votre convenance.
+4. Exportez le projet au format WAR.
+5. Mettez en ligne le fichier WAR sur TOMCAT.
 
-L'UE s'intéresse à l'étude des techniques modernes pour la réalisation de plateforme Web complexes, aussi bien du point de vue formel, que du point de vue de leur mise en oeuvre concrète. 
 
-* Plaquette de présentation : http://www-licence.ufr-info-p6.jussieu.fr/lmd/licence//public/espace_public/offres_formation/descr_ue.php?code_ue=3I017
+## Présentation
+
+Une présentation détaillée de l'application, faisant aussi office de rapport de projet, est disponible [ici](https://github.com/3201101/3I017/REPORT.md).
+
+
+## API
+
+L'application fournit une API permettant d'interagir avec elle. Elle est documentée dans l'application elle-même à l'adresse _/api_.
