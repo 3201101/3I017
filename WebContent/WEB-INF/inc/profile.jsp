@@ -13,7 +13,7 @@
 
 <script type="text/javascript">
 	
-	// Rendu esthÃ©tique
+	// Rendu esthétique
 
 	$('#profile_body').on('show.bs.collapse', function () {
 		$('#profile_body_button').removeClass('glyphicon-plus').addClass('glyphicon-minus');

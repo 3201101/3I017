@@ -14,7 +14,7 @@
 			<%-- Barre latérle --%>
 			<jsp:include page="inc/sidebar.jsp"/>
 		</aside>
-		<main class="col-lg-5 col-md-7" id="flux">
+		<main class="col-lg-5 col-md-7" id="flux_sct">
 			<%-- Affichage des messages --%>
 			<jsp:include page="inc/flux.jsp"/>
 		</main>

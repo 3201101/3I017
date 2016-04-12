@@ -1,7 +1,10 @@
 package ln.app;
 
 /**
- * L'objet PageSettings contient des métadonnées comme le nom et l'adresse relative d'une page donnée.
+ * PageSettings
+ * 
+ * Cet objet contient des métadonnées comme le nom et l'adresse relative d'une page donnée.
+ * Malgré son utilité, cet objet n'est pas statique en raison des exigences de l'Expression language utilisé dans les vues JSP.
  */
 public class PageSettings
 {

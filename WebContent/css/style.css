@@ -22,9 +22,9 @@ body
 {
 	background-color: #70DADA;
 	background: url(wallpaper.jpg) no-repeat center fixed; 
-  	-webkit-background-size: cover; /* pour Chrome et Safari */
-	-moz-background-size: cover; /* pour Firefox */
-	-o-background-size: cover; /* pour Opera */ 
+  	-webkit-background-size: cover; /* Fix pour Chrome et Safari */
+	-moz-background-size: cover; /* Fix pour Firefox */
+	-o-background-size: cover; /* Fix pour Opera */ 
   	background-size: cover;
 }
 
@@ -65,6 +65,40 @@ footer
 .list-group .media .media-left a img
 {
 	margin-top: 5px;
+}
+
+
+/* Login Form */
+
+#login
+{
+	min-width: 200px;
+	padding-top: 20px;
+}
+
+#login .form-group
+{
+	margin-bottom: 10px;
+}
+
+#login input
+{
+	text-align: center;
+}
+
+
+/* Avatars */
+
+#profile_avatar
+{
+	max-width: 256px;
+	max-height: 256px;
+}
+
+.avatar
+{
+	max-width: 64px;
+	max-height: 64px;
 }
 
 

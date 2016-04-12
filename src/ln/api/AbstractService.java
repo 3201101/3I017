@@ -1,10 +1,14 @@
 package ln.api;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import ln.db.DBService;
 
 public class AbstractService
 {
@@ -21,7 +25,7 @@ public class AbstractService
 	 */
 	public static JSONObject serviceRefused(String message, int codeErreur) throws JSONException
 	{
-		return new JSONObject().put("Erreur", codeErreur).put("Message", message);
+		return new JSONObject().put("status", codeErreur).put("error", message);
 	}
 	
 	/**
@@ -52,11 +56,50 @@ public class AbstractService
 	
 	
 	/**
-	 * Fonction d'appel
-	 * TODO to abstract ?
+	 * Documentation
 	 */
-	public static JSONObject call(String[] gets, HttpServletRequest req, String verbe) throws JSONException
+	
+	/**
+	 * Rend le contenu de la documentation de l'API.
+	 * @return Documentation de l'API au format JSON
+	 * @throws JSONException
+	 */
+	public static JSONObject doc() throws JSONException
 	{
-		return serviceRefused("Non implémenté.", 404);
+		try 
+		{
+			ResultSet sql = DBService.select("api", new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), "ORDER BY uri ASC, id ASC");
+			
+			JSONObject o = new JSONObject();
+			JSONArray a = new JSONArray();
+	
+			while(sql.next())
+			{
+				JSONObject j = new JSONObject();
+				
+				j.put("id", sql.getInt("id"));
+				j.put("service", sql.getString("service"));
+				j.put("method", sql.getString("method"));
+				j.put("uri", sql.getString("uri"));
+				j.put("status", sql.getString("status"));
+				j.put("note", sql.getString("note"));
+				j.put("description", sql.getString("description"));
+				j.put("parameters", sql.getString("parameters"));
+				j.put("example", sql.getString("example"));
+				j.put("errors", sql.getString("errors"));
+				j.put("java", sql.getString("java"));
+				
+				a.put(j);
+			}
+
+			sql.close();
+			o.put("doc", a);
+			
+			return o;
+		}
+		catch(SQLException e)
+		{
+			return AbstractService.serviceRefused("Erreur SQL " + e, 1000);
+		}
 	}
 }

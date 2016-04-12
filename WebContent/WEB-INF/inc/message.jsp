@@ -8,3 +8,5 @@
 		<p>Corps du message. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus quam facere laboriosam, soluta saepe provident veniam, iusto velit consequuntur aspernatur assumenda distinctio optio inventore, porro nihil corporis nulla, reprehenderit vitae.</p>
 	</div>
 </li>
+
+<%-- TODO -> Template JS --%>

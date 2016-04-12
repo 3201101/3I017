@@ -2,28 +2,21 @@ package ln.app;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import ln.api.AbstractService;
 import ln.api.MessagesService;
 import ln.api.UsersService;
-import ln.db.DBService;
 
 
 /**
- * Servlet API
+ * API
  *
  * Ce servlet est le point d'entrée de l'API de l'application.
  * Elle retourne des documents JSON générés par l'API en fonction des entrées reçues en GET.
@@ -34,50 +27,18 @@ public class API extends HttpServlet implements Servlet
 {
 	private static final long serialVersionUID = 1L;
 
-	protected static JSONObject index() throws JSONException
-	{
-		try 
-		{
-			ResultSet sql = DBService.select("api", new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), "ORDER BY uri ASC, id ASC");
-			
-			JSONObject o = new JSONObject();
-			JSONArray a = new JSONArray();
-	
-			while(sql.next())
-			{
-				JSONObject j = new JSONObject();
-				
-				j.put("id", sql.getInt("id"));
-				j.put("service", sql.getString("service"));
-				j.put("method", sql.getString("method"));
-				j.put("uri", sql.getString("uri"));
-				j.put("status", sql.getString("status"));
-				j.put("note", sql.getString("note"));
-				j.put("description", sql.getString("description"));
-				j.put("parameters", sql.getString("parameters"));
-				j.put("example", sql.getString("example"));
-				j.put("errors", sql.getString("errors"));
-				j.put("java", sql.getString("java"));
-				
-				a.put(j);
-			}
-
-			sql.close();
-			o.put("doc", a);
-			
-			return o;
-		}
-		catch(SQLException e)
-		{
-			return AbstractService.serviceRefused("Erreur SQL " + e, 1000);
-		}
-	}
-
+	/**
+	 * Renvoie le résultat d'une requête GET à l'API (ou la page de documentation le cas échant).
+	 * @param  req              Requête
+	 * @param  res              Réponse
+	 * @throws ServletException 
+	 * @throws IOException      
+	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		/* Récupération du path GET */
-		String path = req.getRequestURL().toString().replaceAll(".*/api", "").replaceAll("?*", "");
+		String path = req.getRequestURL().toString().replaceAll(".*/api", "");
 		
 		try
 		{
@@ -99,29 +60,35 @@ public class API extends HttpServlet implements Servlet
 		    		switch (path)
 		    		{
 		    			case "/index":
-		    				out.print(index());
+		    				out.print(AbstractService.doc());
 		    				break;
 
 		    			case "/users":
-		    				out.print(UsersService.get());
+		    				if(req.getParameter("username") != null)
+		    					out.print(UsersService.get(req.getParameter("username")));
+		    				else
+		    					out.print(UsersService.get());
 		    				break;
 		    				
-		    			case "/login":
-		    				out.print(UsersService.login(req.getParameter("username"), req.getParameter("password")));
-		    				break;
-
 		    			case "/messages":
+		    				if(req.getParameter("reverse") != null)
+		    					out.print(MessagesService.get(0, Integer.parseInt(req.getParameter("n")), Boolean.parseBoolean(req.getParameter("reverse")), Integer.parseInt(req.getParameter("offset"))));
+		    				else
+		    					out.print(MessagesService.get());
+		    				break;
+		    				
+		    			case "/comments":
 		    				out.print(MessagesService.get());
 		    				break;
 		    				
 		    			default:
-		    				out.print(AbstractService.serviceRefused("Bad Request (DEBUG switch " + path + ")", 400));
+		    				out.print(AbstractService.serviceRefused("Ressource introuvable : " + path + ")", 404));
 		    		}
 			    }
 			}
-			catch(SQLException e)
+			catch(Exception e)
 			{
-				AbstractService.serviceRefused("Bad Request (DEBUG SQLE)", 400);
+				AbstractService.serviceRefused("Serveur : " + e, 500);
 			}
 		}
     	catch(JSONException e)
@@ -130,6 +97,13 @@ public class API extends HttpServlet implements Servlet
     	}
 	}
 
+	/**
+	 * Renvoie le résultat d'une requête POST à l'API.
+	 * @param  req              Requête
+	 * @param  res              Réponse
+	 * @throws ServletException 
+	 * @throws IOException      
+	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
@@ -138,32 +112,82 @@ public class API extends HttpServlet implements Servlet
 		
 		try
 		{
-			/*try
-			{*/
-			   
+			try
+			{
 	    		res.setContentType("application/json");
 	    		PrintWriter out = res.getWriter();
 	    		
 	    		/* Sélection API */
 	    		switch (path)
 	    		{
-
+		    		case "/login":
+	    				out.print(UsersService.login(req.getParameter("username"), req.getParameter("password")));
+	    				break;
+	    				
+		    		case "/logout":
+	    				out.print(UsersService.logout(Integer.parseInt(req.getParameter("session"))));
+	    				break;
+	
+		    		case "/users":
+	    				out.print(UsersService.create(
+	    					req.getParameter("username"),
+	    					req.getParameter("password"),
+	    					req.getParameter("nom"),
+	    					req.getParameter("prenom"),
+	    					req.getParameter("email")
+   						));
+	    				break;	
+	    			
 	    			case "/messages":
-	    				out.print(MessagesService.add(Integer.parseInt(req.getParameter("author")), req.getParameter("message")));
+	    				out.print(MessagesService.add(
+    						Integer.parseInt(req.getParameter("session")),
+    						req.getParameter("message"),
+    						req.getParameter("title"),
+    						Boolean.parseBoolean(req.getParameter("limited")),
+    						Boolean.parseBoolean(req.getParameter("annonce")),
+    						req.getParameter("type"),
+    						Integer.parseInt(req.getParameter("parent"))
+   						));
 	    				break;
 	    				
 	    			default:
-	    				out.print(AbstractService.serviceRefused("Bad Request (DEBUG switch " + path + ")", 400));
-	    		}
-			/*}
-			catch(SQLException e)
+	    				out.print(AbstractService.serviceRefused("Ressource introuvable : " + path + ")", 404));
+			    }
+			}
+			catch(Exception e)
 			{
-				AbstractService.serviceRefused("Bad Request (DEBUG SQLE)", 400);
-			}*/
+				AbstractService.serviceRefused("Serveur : " + e, 500);
+			}
 		}
     	catch(JSONException e)
     	{
     		throw new ServletException();
     	}
+	}
+	
+	/**
+	 * Renvoie le résultat d'une requête PUT à l'API.
+	 * @param  req              Requête
+	 * @param  res              Réponse
+	 * @throws ServletException 
+	 * @throws IOException      
+	 */
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
+	{
+		
+	}
+	
+	/**
+	 * Renvoie le résultat d'une requête DELETE à l'API.
+	 * @param  req              Requête
+	 * @param  res              Réponse
+	 * @throws ServletException 
+	 * @throws IOException      
+	 */
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
+	{
+		
 	}
 }

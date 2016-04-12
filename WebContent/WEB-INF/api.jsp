@@ -15,7 +15,7 @@
 		</div>
 		<script>
 			$(function(){
-				$.getJSON("http://li328.lip6.fr:8280/0ln/api/index", function(r) {
+				$.getJSON("${ app.path }/api/index", function(r) {
 					$.each(r.doc, function(i, item) {
 						var verbetype = "primary";
 						if(item.method == "POST") { verbetype = "success"; }

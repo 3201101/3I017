@@ -1,6 +1,30 @@
 
 # Ln - Log à Rythmes
 
+                  _____            _____          
+                 /\    \          /\    \         
+                /::\____\        /::\____\        
+               /:::/    /       /::::|   |        
+              /:::/    /       /:::::|   |          
+             /:::/    /       /::::::|   |        
+            /:::/    /       /:::/|::|   |        
+           /:::/    /       /:::/ |::|   |                  Log à Rythmes
+          /:::/    /       /:::/  |::|   | _____            
+         /:::/    /       /:::/   |::|   |/\    \           Benjamin Loglisci
+        /:::/____/       /:: /    |::|   /::\____\          André Nasturas
+        \:::\    \       \::/    /|::|  /:::/    /          
+         \:::\    \       \/____/ |::| /:::/    /           2016
+          \:::\    \              |::|/:::/    /            
+           \:::\    \             |::::::/    /   
+            \:::\    \            |:::::/    /    
+             \:::\    \           |::::/    /     
+              \:::\    \          /:::/    /      
+               \:::\____\        /:::/    /       
+                \::/    /        \::/    /        
+                 \/____/          \/____/       
+    
+    
+
 Log à Rythmes est un projet d'application web de type micro-blogging, développé en 2016 par Benjamin Loglisci et André Nasturas, dans le cadre du cours [3i017 Technologies du Web](http://www-licence.ufr-info-p6.jussieu.fr/lmd/licence//public/espace_public/offres_formation/descr_ue.php?code_ue=3I017) de l'UPMC.
 
 ## Installation
@@ -18,7 +42,7 @@ Cette application a été développé en Java, et requiert un serveur TOMCAT, un
 
 ## Présentation
 
-Une présentation détaillée de l'application, faisant aussi office de rapport de projet, est disponible [ici](https://github.com/3201101/3I017/REPORT.md).
+Une présentation détaillée de l'application, faisant aussi office de rapport de projet, est disponible [ici](https://github.com/3201101/3I017/blob/master/REPORT.md).
 
 
 ## API

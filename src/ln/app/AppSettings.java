@@ -1,5 +1,40 @@
 package ln.app;
 
+
+/***************************************************
+
+	
+	          _____            _____          
+	         /\    \          /\    \         
+	        /::\____\        /::\____\        
+	       /:::/    /       /::::|   |        
+	      /:::/    /       /:::::|   |        
+	     /:::/    /       /::::::|   |        	
+	    /:::/    /       /:::/|::|   |        
+	   /:::/    /       /:::/ |::|   |        
+	  /:::/    /       /:::/  |::|   | _____  
+	 /:::/    /       /:::/   |::|   |/\    \ 		
+	/:::/____/       /:: /    |::|   /::\____\		
+	\:::\    \       \::/    /|::|  /:::/    /
+	 \:::\    \       \/____/ |::| /:::/    / 
+	  \:::\    \              |::|/:::/    /  
+	   \:::\    \             |::::::/    /   
+	    \:::\    \            |:::::/    /    
+	     \:::\    \           |::::/    /     
+	      \:::\    \          /:::/    /      
+	       \:::\____\        /:::/    /       
+	        \::/    /        \::/    /        
+	         \/____/          \/____/         
+	                                          
+
+
+***************************************************/
+
+/**
+ * AppSettings
+ * 
+ * Surcharge PageSettings pour fournir des informations générales relative à l'application.
+ */
 public final class AppSettings extends PageSettings
 {
 	static String atom;
@@ -14,7 +49,8 @@ public final class AppSettings extends PageSettings
 		root = "0ln";
 		name = "Ln";
 		titl = "Log À Rythmes";
-		atom = "http://li328.lip6.fr:8280/";
+		//atom = "http://li328.delfosia.net/";
+		atom = "http://li328.lip6.fr/";
 		path = atom + root;
 	}
 

@@ -145,9 +145,9 @@ public class DBService
 			Iterator<String> vI = where_val.iterator();
 			
 			while(vI.hasNext() && nI.hasNext())
-				query+= nI.next()  + " = '" + vI.next() + "',";
+				query+= nI.next()  + " = '" + vI.next() + "' AND ";
 			
-			query = query.substring(0, query.length()-1);
+			query = query.substring(0, query.length()-5);
 		}
 
 		// Options SQL
@@ -206,11 +206,11 @@ public class DBService
 		// Valeurs
 		query+= "VALUES (";
 		
-		for (String i : insert_name)
+		for (String i : insert_val)
 			query+= "'" + i + "',";
 		
 		query = query.substring(0, query.length()-1) + ");";
-		
+		System.out.println(query);
 		Statement st = co.createStatement();
 		int r = st.executeUpdate(query);
 
@@ -282,7 +282,7 @@ public class DBService
 	 * @throws MongoException 
 	 * @throws UnknownHostException 
 	 */
-	private static DBCollection getMongoCo(String table) throws UnknownHostException, MongoException
+	public static DBCollection getMongoCo(String table) throws UnknownHostException, MongoException
 	{
 		return getMongo().getCollection(table);
 	}
@@ -310,7 +310,8 @@ public class DBService
 	 */
 	public static boolean add(String table, BasicDBObject o) throws MongoException, UnknownHostException
 	{
-		return getMongoCo(table).insert(o).getN() == 1;
+		getMongoCo(table).insert(o);
+		return true;
 	}
 	
 	

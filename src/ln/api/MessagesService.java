@@ -1,13 +1,8 @@
 package ln.api;
 
 import java.net.UnknownHostException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,12 +30,21 @@ public class MessagesService extends AbstractService
 	 * @return
 	 * @throws JSONException
 	 */
-	public static JSONObject get(int parent, int n, boolean reverse) throws JSONException
+	public static JSONObject get(int parent, int n, boolean reverse, int offset) throws JSONException
 	{
 		try
 		{
 			BasicDBObject q = new BasicDBObject();
 			q.append("parent", parent);		// Message parent, 0 si aucun, n pour commentaire du message n.
+			
+			if(offset != 0)
+			{
+				if(reverse == true)
+					q.append("_id", new BasicDBObject("$gt", offset));
+				else
+					q.append("_id", new BasicDBObject("$lt", offset));
+			}
+			
 			DBCursor c = DBService.find("messages", q);
 			if(reverse == true)
 				c.sort(new BasicDBObject().append("date", -1));
@@ -74,7 +78,7 @@ public class MessagesService extends AbstractService
 		}
 		catch (MongoException | UnknownHostException e)
 		{
-			return serviceRefused("Erreur liée à la base de données.", 1000);
+			return serviceRefused("Erreur Mongo (Message.get) " + e, 500);
 		}
 	}
 	
@@ -85,30 +89,46 @@ public class MessagesService extends AbstractService
 	 */
 	public static JSONObject get() throws JSONException
 	{
-		return get(0, 10, true);
+		return get(0, 10, true, 0);
 	}
 	
 	/**
-	 * Ajoute un message à la base de données.
-	 * @param authorId
-	 * @param message
-	 * @param title
-	 * @param limited
-	 * @param promoted
-	 * @param type
+	 * Ajoute un message.
+	 * @param session       Token d'authentification
+	 * @param message       Contenu du message
+	 * @param title         Titre du message
+	 * @param limited       Portée du message (True pour un message limité aux amis de l'auteur)
+	 * @param promoted		Annonce (True pour une mise en avant du message)
+	 * @param type			Type du message (Définit la couleur du message, "normal" par défaut)
 	 * @return
 	 * @throws JSONException
 	 */
-	public static JSONObject add(int authorId, String message, String title, boolean limited, boolean promoted, String type, int parent) throws JSONException
+	public static JSONObject add(int session, String message, String title, boolean limited, boolean promoted, String type, int parent) throws JSONException
 	{
+		String author;
+		try 
+		{
+			author = UsersService.getSession(session);
+		}
+		catch (SQLException e1)
+		{
+			return serviceRefused("Erreur SQL (Message.add) " + e1, 500);
+		}
+		
+		if(author == "")
+		{
+			return serviceRefused("Session invalide.", 403);
+		}
+		
 		BasicDBObject o = new BasicDBObject()
-		 .append("author", authorId)
+		 .append("author", author)
 		 .append("message", message)
 		 .append("title", title)
 		 .append("limited", limited)
 		 .append("promoted", promoted)
 		 .append("type", type)
-		 .append("date", new Date());
+		 .append("date", new Date())
+		 .append("parent", parent);
 		
 		try
 		{
@@ -116,23 +136,32 @@ public class MessagesService extends AbstractService
 		}
 		catch (MongoException | UnknownHostException e)
 		{
-			return serviceRefused("Erreur liée à la base de données.", 1000);
+			return serviceRefused("Erreur Mongo (Message add) " + e, 500);
 		}
 	}
 
-	public static JSONObject add(int authorId, String message, String title, boolean limited) throws JSONException
+	/**
+	 * Ajoute un message
+	 * @param  session       Session d'authentification
+	 * @param  message       Contenu du message
+	 * @param  title         Titre du message
+	 * @param  limited       Portée du message
+	 * @return               
+	 * @throws JSONException 
+	 */
+	public static JSONObject add(int session, String message, String title, boolean limited) throws JSONException
 	{
-		return MessagesService.add(authorId, message, title, limited, false, "normal", 0);
+		return MessagesService.add(session, message, title, limited, false, "normal", 0);
 	}
 	
-	public static JSONObject add(int authorId, String message, int parent) throws JSONException
+	public static JSONObject add(int session, String message, int parent) throws JSONException
 	{
-		return MessagesService.add(authorId, message, "", false, false, "normal", parent); 
+		return MessagesService.add(session, message, "", false, false, "normal", parent); 
 	}
 	
-	public static JSONObject add(int authorId, String message) throws JSONException
+	public static JSONObject add(int session, String message) throws JSONException
 	{
-		return MessagesService.add(authorId, message, "", false);
+		return MessagesService.add(session, message, "", false);
 	}
 }
 

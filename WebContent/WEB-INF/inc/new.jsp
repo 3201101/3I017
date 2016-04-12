@@ -16,23 +16,23 @@
 				<div class="form-group">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox"> Limitï¿½ aux amis
+							<input type="checkbox" id="new_limited"> Limité aux amis
 						</label>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group onroot">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox"> Annonce
+							<input type="checkbox" id="new_annonce"> Annonce
 						</label>
 					</div>
 				</div>
-				<select class="form-group form-control">
-					<option>Normal</option>
-					<option class="bg-info">Information</option>
-					<option class="bg-success">NouveautÃ©</option>
-					<option class="bg-warning">Maintenance</option>
-					<option class="bg-danger">Panne</option>
+				<select class="form-group form-control onroot" id="new_type">
+					<option>normal</option>
+					<option class="bg-info">info</option>
+					<option class="bg-success">success</option>
+					<option class="bg-warning">warning</option>
+					<option class="bg-danger">danger</option>
 				</select>
 			</div>
 			<button type="submit" class="btn btn-primary btn-lg btn-block" id="new_submit">Envoyer !</button>
@@ -43,7 +43,7 @@
 
 <script type="text/javascript">
 	
-	// Rendu esthÃ©tique
+	// Rendu esthétique
 
 	$('#new_options').on('show.bs.collapse', function () {
 		$('#new_options_button').text("Moins d'options");
@@ -59,14 +59,33 @@
 		$('#new_body_button').removeClass('glyphicon-minus').addClass('glyphicon-plus');
 	});
 	
-	$('#new_form').on('submit', function(e) {
-		message = $("new_message").val();
+	$('#new_form').on('submit', function() {
 		$.ajax({
-			url: '${ app.path }/api/messages',
-			type: 'POST',
-			data: 'author=' + 1 + '&message=' + message,
-			dataType: 'html'
+			type: "POST",
+			url: "${ app.path }/api/messages",
+			dataType: "json",
+			data: {
+				session: session,
+				message: $("#new_message").val(),
+				title: $("#new_title").val(),
+				limited: $("#new_limited").is(":checked"),
+				annonce: $("#new_annonce").is(":checked"),
+				type:$("#new_type").val(),
+				parent: 0
+			},
+			success: function(r){
+				if(r.error) {
+					popalert("danger", r.error, r.status);
+				}
+				else {
+					popalert("success", "Message envoyé !");
+				}
+			},
+			error: function(r, s, e){
+				popalert("danger", e, s);	
+			}
 		});
+		return false;
 	});
 
 </script>
