@@ -12,4 +12,4 @@
 <%--
 <section id="profile_sect">
 	<jsp:include page="profile.jsp"/>
-</section>-->
+</section>--%>

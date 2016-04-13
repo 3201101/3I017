@@ -2,6 +2,7 @@ package ln.app;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -62,6 +63,10 @@ public class API extends HttpServlet implements Servlet
 		    			case "/index":
 		    				out.print(AbstractService.doc());
 		    				break;
+		    				
+		    			case "/friends":
+		    				out.print(UsersService.friends(Integer.parseInt(req.getParameter("session"))));
+		    				break;
 
 		    			case "/users":
 		    				if(req.getParameter("username") != null)
@@ -72,13 +77,15 @@ public class API extends HttpServlet implements Servlet
 		    				
 		    			case "/messages":
 		    				if(req.getParameter("reverse") != null)
-		    					out.print(MessagesService.get(0, Integer.parseInt(req.getParameter("n")), Boolean.parseBoolean(req.getParameter("reverse")), Integer.parseInt(req.getParameter("offset"))));
+		    					out.print(MessagesService.get("", Integer.parseInt(req.getParameter("n")), Boolean.parseBoolean(req.getParameter("reverse")), Long.parseLong((req.getParameter("offset")))));
+		    				else if(req.getParameter("id") != null)
+		    					out.print(MessagesService.get(req.getParameter("id")));
 		    				else
 		    					out.print(MessagesService.get());
 		    				break;
 		    				
 		    			case "/comments":
-		    				out.print(MessagesService.get());
+		    				out.print(MessagesService.get(req.getParameter("parent"), 0, false, 0));
 		    				break;
 		    				
 		    			default:
@@ -127,6 +134,10 @@ public class API extends HttpServlet implements Servlet
 		    		case "/logout":
 	    				out.print(UsersService.logout(Integer.parseInt(req.getParameter("session"))));
 	    				break;
+	    				
+		    		case "/follow":
+	    				out.print(UsersService.follow(Integer.parseInt(req.getParameter("session")), req.getParameter("followed")));
+	    				break;
 	
 		    		case "/users":
 	    				out.print(UsersService.create(
@@ -146,7 +157,7 @@ public class API extends HttpServlet implements Servlet
     						Boolean.parseBoolean(req.getParameter("limited")),
     						Boolean.parseBoolean(req.getParameter("annonce")),
     						req.getParameter("type"),
-    						Integer.parseInt(req.getParameter("parent"))
+    						req.getParameter("parent")
    						));
 	    				break;
 	    				

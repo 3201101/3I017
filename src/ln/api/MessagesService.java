@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +24,47 @@ import ln.db.DBService;
 public class MessagesService extends AbstractService
 {
 	/**
+	 * Retourne un message unique.
+	 * @param id Identifiant du message
+	 * @return
+	 * @throws JSONException
+	 */
+	public static JSONObject get(String id) throws JSONException
+	{
+		try
+		{
+			BasicDBObject q = new BasicDBObject();
+			q.append("_id", new ObjectId(id));		// Message parent, 0 si aucun, n pour commentaire du message n.
+			
+			DBCursor c = DBService.find("messages", q);
+			
+			if(c.hasNext() == false)
+				return serviceRefused("Aucun résultat (Message.get.id)", 404);
+			
+			BasicDBObject b = (BasicDBObject) c.next();
+			JSONObject j = new JSONObject();
+			j.put("id", b.getObjectId("_id").toString());
+			j.put("author", b.getString("author"));
+			j.put("message", b.getString("message"));
+			j.put("title", b.getString("title"));
+			j.put("type", b.getString("type"));
+			j.put("limited", b.getBoolean("limited"));
+			j.put("promoted", b.getBoolean("promoted"));
+			j.put("date", b.getLong("date"));
+			j.put("parent", b.getString("parent"));
+			
+			c.close();
+			
+			return j;
+			
+		}
+		catch (MongoException | UnknownHostException e)
+		{
+			return serviceRefused("Erreur Mongo (Message.get) " + e, 500);
+		}
+	}
+	
+	/**
 	 * Retourne les n derniers ou premiers messages d'un parent donné;
 	 * @param parent identifiant du message parent, pour retourner les commenaitre de ce message. 0 si aucun parent.
 	 * @param n nombre de messages à retourner. 0 pour retourner tous les messages trouvés.
@@ -30,19 +72,21 @@ public class MessagesService extends AbstractService
 	 * @return
 	 * @throws JSONException
 	 */
-	public static JSONObject get(int parent, int n, boolean reverse, int offset) throws JSONException
+	public static JSONObject get(String parent, int n, boolean reverse, long offset) throws JSONException
 	{
 		try
 		{
 			BasicDBObject q = new BasicDBObject();
-			q.append("parent", parent);		// Message parent, 0 si aucun, n pour commentaire du message n.
+			
+			if(parent != "")
+				q.append("parent", parent);		// Message parent, 0 si aucun, n pour commentaire du message n.
 			
 			if(offset != 0)
 			{
 				if(reverse == true)
-					q.append("_id", new BasicDBObject("$gt", offset));
+					q.append("date", new BasicDBObject("$gt", offset));
 				else
-					q.append("_id", new BasicDBObject("$lt", offset));
+					q.append("date", new BasicDBObject("$lt", offset));
 			}
 			
 			DBCursor c = DBService.find("messages", q);
@@ -58,17 +102,22 @@ public class MessagesService extends AbstractService
 			while(c.hasNext() && (i < n || n == 0))
 			{
 				BasicDBObject b = (BasicDBObject) c.next();
-				JSONObject j = new JSONObject();
-				j.put("id", b.getObjectId("_id").toString());
-				j.put("author", b.getString("author"));
-				j.put("message", b.getString("message"));
-				j.put("title", b.getString("title"));
-				j.put("type", b.getString("type"));
-				j.put("limited", b.getBoolean("limited"));
-				j.put("promoted", b.getBoolean("promoted"));
-				j.put("date", b.getString("date"));
-				
-				a.put(j);
+				String par = b.getString("parent");
+				if(parent != "" || par.length() < 2)
+				{
+					JSONObject j = new JSONObject();
+					j.put("id", b.getObjectId("_id").toString());
+					j.put("author", b.getString("author"));
+					j.put("message", b.getString("message"));
+					j.put("title", b.getString("title"));
+					j.put("type", b.getString("type"));
+					j.put("limited", b.getBoolean("limited"));
+					j.put("promoted", b.getBoolean("promoted"));
+					j.put("date", b.getLong("date"));
+					j.put("parent", b.getString("parent"));
+					
+					a.put(j);
+				}
 			}
 			
 			c.close();
@@ -89,7 +138,7 @@ public class MessagesService extends AbstractService
 	 */
 	public static JSONObject get() throws JSONException
 	{
-		return get(0, 10, true, 0);
+		return get("", 10, true, 0);
 	}
 	
 	/**
@@ -103,7 +152,7 @@ public class MessagesService extends AbstractService
 	 * @return
 	 * @throws JSONException
 	 */
-	public static JSONObject add(int session, String message, String title, boolean limited, boolean promoted, String type, int parent) throws JSONException
+	public static JSONObject add(int session, String message, String title, boolean limited, boolean promoted, String type, String parent) throws JSONException
 	{
 		String author;
 		try 
@@ -127,7 +176,7 @@ public class MessagesService extends AbstractService
 		 .append("limited", limited)
 		 .append("promoted", promoted)
 		 .append("type", type)
-		 .append("date", new Date())
+		 .append("date", new Date().getTime())
 		 .append("parent", parent);
 		
 		try
@@ -151,12 +200,12 @@ public class MessagesService extends AbstractService
 	 */
 	public static JSONObject add(int session, String message, String title, boolean limited) throws JSONException
 	{
-		return MessagesService.add(session, message, title, limited, false, "normal", 0);
+		return MessagesService.add(session, message, title, limited, false, "normal", "");
 	}
 	
 	public static JSONObject add(int session, String message, int parent) throws JSONException
 	{
-		return MessagesService.add(session, message, "", false, false, "normal", parent); 
+		return MessagesService.add(session, message, "", false, false, "normal", ""); 
 	}
 	
 	public static JSONObject add(int session, String message) throws JSONException

@@ -71,7 +71,7 @@
 				limited: $("#new_limited").is(":checked"),
 				annonce: $("#new_annonce").is(":checked"),
 				type:$("#new_type").val(),
-				parent: 0
+				parent: ""
 			},
 			success: function(r){
 				if(r.error) {

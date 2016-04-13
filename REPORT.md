@@ -4,14 +4,36 @@
 Log à Rythmes est un projet d'application web de type micro-blogging, écrit en Java. Il s'agit d'un web servlet Java fonctionnant avec un serveur Apache TOMCAT, et communiquant avec des bases de données MySQL et MongoDB.
 
 
+## En bref
+
+Ce projet a porté sur le développement de plusieurs parties relativement denses, et a par conséquent requis un minimum d'organisation. En l'occurence, on a adopté et globalement tenté de respecter l'architecture _Modèle-Vue-Contrôlleur_, consistant à séparer les codes sources dédiés aux traitement des données, aux opérations à proprement parler, et à l'affichage.
+
+On trouvera donc des servlets dans le paquet **ln.app**, des méthodes d'accès à la base de données dans les paquets **ln.api** et **ln.db**, ainsi que des fichiers JSP contenant l'affichage client et tous les scripts JavaScript écrits.
+
+De nombreuses parties peuvent être améliorés, certaines fonctionnalités peuvent être limitées, risquées voire instables, mais nous avons réussi à obtenir un résultat acceptable en l'état : il est possible de s'inscrire sur l'application, de se connecter avec un compte existant, de lire les messages postés et d'en ajouter d'autres, et d'établir une liste d'amis.
+
+
 ## Routeur
 
-Le point d'entrée de l'application est le fichier **web.xml**, situé dans le dossier _WebContent/WEB-INF_. Il contient, au format XML, la liste de tous les servlets composant l'application, et les routes - les adresses URL demandées par le client - correspondantes. Quand un client demande une ressource à l'application, que ce soit une page web ou une requête à l'API, le serveur TOMCAT cherche une correspondance pour l'URL demandée dans ce fichier, et charge le servlet correspondant.
+Le point d'entrée de l'application est le fichier **web.xml**, situé dans le dossier _WebContent/WEB-INF_. Il contient, au format XML, la liste de tous les servlets composant l'application, et les routes - les adresses URL demandées par le client - correspondantes.
+
+    <servlet>
+        <servlet-name>Index</servlet-name>
+        <servlet-class>ln.app.Index</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Index</servlet-name>
+        <url-pattern></url-pattern>
+    </servlet-mapping>
+
+Quand un client demande une ressource à l'application, que ce soit une page web ou une requête à l'API, le serveur TOMCAT cherche une correspondance pour l'URL demandée dans ce fichier, et charge le servlet correspondant.
+
+> L'URL vide correspond à la racine du site. On peut aussi utiliser un wildcard (joker \*), mais il faut faire attention à ne pas capturer plus qu'on ne le souhaite : web.xml n'applique pas les routes dans un ordre particulier, et la capture d'une URL "\**peut provoquer une boucle infinie à l'exécution.
 
 
 ## Controlleurs
 
-Les servlets sont situés dans le packet **ln.app**. Chacune de ces classes, dérivant de _HttpServlet_ et implémentant _Servlet_, implémente des méthodes qui seront appelées en fonction de la méthode HTTP utilisée par le client. Par exemple, la réponse d'une requête HTTP ```GET http://app_path/api``` sera donnée par la méthode **ln.app.API.doGet()**.
+Les servlets sont situés dans le packet **ln.app**. Chacune de ces classes, dérivant de _HttpServlet_ et implémentant _Servlet_, implémente des méthodes qui seront appelées en fonction de la méthode HTTP utilisée par le client. Par exemple, la réponse d'une requête HTTP ```GET http://app_path/api``` sera donnée par la méthode ```ln.app.API.doGet()```.
 
 ### Page d'accueil
 
@@ -29,7 +51,6 @@ Cette ligne va afficher chez le client le rendu du fichier **WebContent/WEB-INF/
 ## Vues
 
 Tout ce qui concerne l'affichage des pages se trouvera dans le dossier _WebContent_. On y différentie les dossiers _WEB-INF_ (et _META-INF_), qui contiennent des fichiers utilisés cþté serveur et non accessibles au client, et les autres fichiers et dossiers qui seront accessibles ouvertement par le client, comme des feuilles de style CSS ou des bibliothèques JavaScript.
-
 
 ### Rendu des templates
 
@@ -70,7 +91,6 @@ Cette déclaration modifie la valeur du texte des liens (balise a) enfants de to
 
 Ce bloc indique qu'un fond d'écran, **css/wallpaper.jpg** (les URL sont relatives à l'emplacement du fichier CSS), sera appliqué, centré et fixé (par rapport au défilement de la page). La valeur _cover_ de la propriété CSS3 _background-size_ permet d'un comportement intéressant qui permet d'afficher l'image en plein écran quelle que soit la taille du navigateur, et sans déformer l'image. Enfin, les propriétés commençant par un _-_ sont des fixes propriétaires qui servent pour certaines anciennes versions des navigateurs.
 
-
 ### Animations esthétiques
 
 En plus des feuilles de style, on trouve des scripts JavaScript pour améliorer encore un peu le rendu. Voici par exemple un script lié à l'affichage du formulaire d'écriture d'un nouveau message, écrit dans le fichier **WEB-INF/inc/new.jsp** :
@@ -86,6 +106,34 @@ En plus des feuilles de style, on trouve des scripts JavaScript pour améliorer 
 
 Ce code utilise des fonctionnalités apportées par jQuery (dont la bibliothèque est incluse plus haut dans la page). Il sélectionne, à deux reprises, l'objet DOM dans la page HTML qui possède l'identifiant unique _new\_options_. Grâce à la méthode ```on()```, elle crée deux fonctions anonymes qui seront appelées chaque fois que cet objet émettra les événements _show.bs.collapse_ et _hide.bs.collapse_. Ces événements sont créés par Bootstrap et correspondent respectivement à l'apparition et la disparition du bloc _new\_options_ suite aux fonctions _collapse_ de Bootstrap.
 
+## Interactivité client
+
+En plus des améliorations d'ordre esthétique, JavaScript et jQuery nous permettent d'effectuer des opérations logiques plus utiles à l'utilisateur. Par exemple, tout l'aspect de la connexion d'un utlisateur est géré ainsi :
+
+    $("#login").on("submit", function(){
+        $.ajax({
+            type: "POST",
+            url: "${ app.path }/api/login",
+            dataType: "json",
+            data: {
+                username: $("#login_username").val(),
+                password: $("#login_password").val()
+            },
+            success: function(r){
+                if(r.session) {
+                    session = r.session;
+                    username = r.login;
+                    admin = r.admin;
+                    login();
+                    Cookies.set('session', r);
+                    popalert("info", "Vous êtes connecté.");
+                } 
+            }
+        });
+        return false;
+    });
+
+Ce code, qui se trouve dans le fichier **WebContent/WEB-INF/inc/navbar.jsp**, est appelé lorsque le client valide un formulaire de connexion. On utilise Ajax pour effectuer une requête à l'[API](#api), puis on stocke le résultat dans des variables globales, mais aussi dans un cookie - ce qui permet d'éviter d'avoir à se reconnecter tout le temps. On appelle aussi la fonction ```login()```, définie plus haut dans le fichier, qui s'occupe elle de toute les effets visuels de la connexion.
 
 ## Données
 

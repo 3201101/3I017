@@ -67,6 +67,10 @@ footer
 	margin-top: 5px;
 }
 
+#message_modal_body
+{
+	font-size: 18px;
+}
 
 /* Login Form */
 

@@ -128,6 +128,13 @@
 						</div>
 					</div>
 					</fieldset>
+					<div class="form-group">
+						<label for="profile_friends" class="col-sm-3 control-label">Amis</label>
+						<div class="col-sm-9">
+							<select class="form-control" id="profile_friends">
+							</select>
+						</div>
+					</div>
 				</div>
 			</div>
 			</div>
@@ -229,6 +236,20 @@
 					if(r.admin){
 						$("#profile_admin").attr("checked", "checked");
 					}
+					$.ajax({
+						type: "GET",
+						url: "${ app.path }/api/friends",
+						dataType: "json",
+						data: {
+							session: session
+						},
+						success: function(r){
+							$.each(r.friends, function(i, f) {
+								$("#profile_friends").append("<option>" + f + "</option>");
+							});
+						}
+					});
+
 				}
 			}
 		});
@@ -288,14 +309,12 @@
 				session: session
 			},
 			success: function(r){
-				if(r)
-				{
-					logout();
-					session = "";
-					popalert("info", "Vous êtes déconnecté.");
-				}
 			}
 		});
+		logout();
+		session = 0;
+		Cookies.remove('session');
+		popalert("info", "Vous êtes déconnecté.");
 	});
 
 

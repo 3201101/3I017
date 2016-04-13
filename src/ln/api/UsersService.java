@@ -179,7 +179,7 @@ public class UsersService extends AbstractService
 			v.add(nom);
 			v.add(email);
 			v.add("http://placehold.it/128/" + (int)(Math.random() * 999999) + "/ffffff?text=" + Character.toString(login.charAt(0)).toUpperCase());
-			v.add("0");
+			v.add("1");
 			
 			if(DBService.insert("users", n, v) > 0)
 				return serviceAccepted();
@@ -272,6 +272,69 @@ public class UsersService extends AbstractService
 				s = r.getString("username");
 		}
 		return s;
+	}
+	
+	
+	/**
+	 * Crée un lien d'amitié.
+	 * @param session Jeton d'authentification
+	 * @param followed le demandé
+	 * @return 
+	 * @throws JSONException 
+	 * @throws SQLException
+	 */
+	public static JSONObject follow(int session, String followed) throws JSONException
+	{
+		try
+		{
+			ArrayList<String> n = new ArrayList<String>();
+			n.add("follower");
+			n.add("followed");
+			ArrayList<String> v = new ArrayList<String>();
+			v.add(getSession(session));
+			v.add(followed);
+			
+			DBService.insert("friends", n, v);
+		}
+		catch (SQLException e)
+		{
+			return serviceRefused("Erreur lors de l'ajout d'ami : " + e, 500);
+		}
+		return serviceAccepted();
+	}
+	
+	/**
+	 * Retourne la liste des amis
+	 * @param session Jeton d'authentification
+	 * @return 
+	 * @throws JSONException 
+	 * @throws SQLException
+	 */
+	public static JSONObject friends(int session) throws JSONException
+	{
+		try
+		{
+			ArrayList<String> c = new ArrayList<String>();
+			c.add("follower");
+			ArrayList<String> b = new ArrayList<String>();
+			b.add(getSession(session));
+			ResultSet r = DBService.select("friends", new ArrayList<String>(), c, b);
+			JSONObject o = new JSONObject();
+			JSONArray a = new JSONArray();
+			
+			while(r.next())
+			{
+				a.put(r.getString("followed"));
+			}
+			
+			r.close();
+			o.put("friends", a);
+			return o;
+		}
+		catch (SQLException e)
+		{
+			return serviceRefused("Erreur lors de l'ajout d'ami", 500);
+		}
 	}
 	
 
