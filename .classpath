@@ -8,7 +8,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="/home/anti/Téléchargements/Firefox/mongo-2.7.3.jar"/>
-	<classpathentry kind="lib" path="/home/anti/Téléchargements/bson-3.0.2.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/mongo-2.7.3.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
