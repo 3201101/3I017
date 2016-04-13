@@ -10,7 +10,7 @@
 	</header>
 	<main class="col-md-offset-2 col-md-8" id="flux">
 		<h1>Documentation de l'API</h1>
-		<p>L'application Log À Rythmes est fournie avec une API respectant partiellement les spécifications REST. Cette page d'accueil présente les différents services implémentés par l'API.</p>
+		<p>L'application Log Ã© Rythmes est fournie avec une API respectant partiellement les spÃ©cifications REST. Cette page d'accueil prÃ©sente les diffÃ©rents services implÃ©mentÃ©s par l'API.</p>
 		<div class="panel-group" id="doc" role="tablist" aria-multiselectable="true">
 		</div>
 		<script>
@@ -23,7 +23,7 @@
 						else if(item.method == "PUT") { verbetype = "warning"; }
 						var note = "";
 						if(item.note.length > 0) { note = "<div class=\"alert alert-" + item.status + "\" role=\"alert\">" + item.note + "</div>"; }
-						$("#doc").append("<div class=\"panel panel-default\"><div class=\"panel-heading\" role=\"tab\" id=\"title_" + item.id + "\"><h4 class=\"panel-title\"><a role=\"button\" data-toggle=\"collapse\" data-parent=\"#doc\" href=\"#item_" + item.id + "\" aria-expanded=\"false\" aria-controls=\"collapse" + item.id + "\"><span class=\"label label-" + verbetype + "\">" + item.method + "</span> " + item.uri + "</a></h4></div><div id=\"item_" + item.id + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"title_" + item.id + "\"><div class=\"panel-body\">" + note + "<h4>Description</h4><p id=\"description\">" + item.description + "</p><h4>Paramètres</h4><ul>" + item.parameters + "</ul><h4>Format de sortie</h4><pre>" + item.example + "</pre></div></div></div>");
+						$("#doc").append("<div class=\"panel panel-default\"><div class=\"panel-heading\" role=\"tab\" id=\"title_" + item.id + "\"><h4 class=\"panel-title\"><a role=\"button\" data-toggle=\"collapse\" data-parent=\"#doc\" href=\"#item_" + item.id + "\" aria-expanded=\"false\" aria-controls=\"collapse" + item.id + "\"><span class=\"label label-" + verbetype + "\">" + item.method + "</span> " + item.uri + "</a></h4></div><div id=\"item_" + item.id + "\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"title_" + item.id + "\"><div class=\"panel-body\">" + note + "<h4>Description</h4><p id=\"description\">" + item.description + "</p><h4>ParamÃ©tres</h4><ul>" + item.parameters + "</ul><h4>Format de sortie</h4><pre>" + item.example + "</pre></div></div></div>");
 						// TODO form live test ?
 					});
 				});

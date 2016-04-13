@@ -289,7 +289,7 @@ public class DBService
 	
 	/**
 	 * Recherche un document dans une table de la base de données MongoDB.
-	 * @param table Collecgtion visée par la recherche 
+	 * @param table Collection visée par la recherche 
 	 * @param o BasicDBObject contenant les critères de recherche
 	 * @return DBCursor Curseur pointant sur les résultats de la recherche
 	 * @throws MongoException

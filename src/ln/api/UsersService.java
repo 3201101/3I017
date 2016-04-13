@@ -439,6 +439,40 @@ public class UsersService extends AbstractService
 	    
 	    return result;
 	}
+	
+	/**
+	 * Retourne la liste des amis
+	 * @param session Jeton d'authentification
+	 * @return 
+	 * @throws JSONException 
+	 * @throws SQLException
+	 */
+	public static JSONObject liked(int session) throws JSONException
+	{
+		try
+		{
+			ArrayList<String> c = new ArrayList<String>();
+			c.add("liker");
+			ArrayList<String> b = new ArrayList<String>();
+			b.add(getSession(session));
+			ResultSet r = DBService.select("like", new ArrayList<String>(), c, b);
+			JSONObject o = new JSONObject();
+			JSONArray a = new JSONArray();
+			
+			while(r.next())
+			{
+				a.put(r.getString("liked"));
+			}
+			
+			r.close();
+			o.put("like", a);
+			return o;
+		}
+		catch (SQLException e)
+		{
+			return serviceRefused("Erreur lors de l'optention des like", 500);
+		}
+	}
 }
 
 

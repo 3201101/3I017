@@ -12,6 +12,8 @@ On trouvera donc des servlets dans le paquet **ln.app**, des méthodes d'accès 
 
 De nombreuses parties peuvent être améliorés, certaines fonctionnalités peuvent être limitées, risquées voire instables, mais nous avons réussi à obtenir un résultat acceptable en l'état : il est possible de s'inscrire sur l'application, de se connecter avec un compte existant, de lire les messages postés et d'en ajouter d'autres, et d'établir une liste d'amis.
 
+À l'opposée, nous n'avons pas implémenté certaines fonctionnalités, principalement les affichages conditionnés (messages d'amis seulement, messages issus d'un moteur de recherche, etc...). 
+
 
 ## Routeur
 
@@ -133,7 +135,7 @@ En plus des améliorations d'ordre esthétique, JavaScript et jQuery nous permet
         return false;
     });
 
-Ce code, qui se trouve dans le fichier **WebContent/WEB-INF/inc/navbar.jsp**, est appelé lorsque le client valide un formulaire de connexion. On utilise Ajax pour effectuer une requête à l'[API](#api), puis on stocke le résultat dans des variables globales, mais aussi dans un cookie - ce qui permet d'éviter d'avoir à se reconnecter tout le temps. On appelle aussi la fonction ```login()```, définie plus haut dans le fichier, qui s'occupe elle de toute les effets visuels de la connexion.
+Ce code, qui se trouve dans le fichier **WebContent/WEB-INF/inc/navbar.jsp**, est appelé lorsque le client valide un formulaire de connexion. On utilise Ajax pour effectuer une requête à l'[API]("#api"), puis on stocke le résultat dans des variables globales, mais aussi dans un cookie - ce qui permet d'éviter d'avoir à se reconnecter tout le temps. On appelle aussi la fonction ```login()```, définie plus haut dans le fichier, qui s'occupe elle de toute les effets visuels de la connexion.
 
 > Cette partie-là du projet est probablement la moins propre. Toutes les fonctions javascript requises ont été définies à la volée quand elles étaient nécessaires, et le code est réparti dans les fichiers JSP pour bénéficier des avantages de l'ExpressionLanguage de Java, bien que cela nuit à la compréhension du code et à une bonne vue d'ensemble du projet.
 > Pour ajouter plus de clareté, il faudrait centraliser tout le code Javascript dans un fichier dédié, y normaliser les noms de fonctions et de variables pour minimiser les sources d'erreurs, et enfin optimiser les appels de fonctions : actuellement, on observe occasionellement des bugs provoquant des multiples requêtes à l'API à des moments où une seule était voulue, par exemple.

@@ -67,6 +67,10 @@ public class API extends HttpServlet implements Servlet
 		    			case "/friends":
 		    				out.print(UsersService.friends(Integer.parseInt(req.getParameter("session"))));
 		    				break;
+		    			
+		    			case "/like":
+		    				out.print(UsersService.liked(Integer.parseInt(req.getParameter("session"))));
+		    				break;
 
 		    			case "/users":
 		    				if(req.getParameter("username") != null)

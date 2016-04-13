@@ -19,7 +19,12 @@
 			<ul class="nav navbar-nav onlogin">
 				<%-- TODO Conditionner l'active --%>
 				<li class="active" id="ln_home"><a href="#">Accueil</a></li>
-				<li><a href="#" id="ln_friends">Mes amis</a></li>
+				<li class="dropdown friends" id="friends_dropdown">
+					<a href="#" id="ln_friends" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mes amis</a>
+					<div class="dropdown-menu" id="friends">
+						
+					</div>	
+				</li>
 				<li><a href="#" id="ln_messages">Mes messages</a></li>
 			</ul>
 
@@ -69,7 +74,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="#" data-toggle="modal" data-target="#profile_modal">Profil</a></li>
 						<li class="divider"></li>
-						<li><a href="#" id="logout">Déconnexion</a></li>
+						<li><a href="#" id="logout">DÃ©connexion</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -107,7 +112,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="profile_prenom" class="col-sm-3 control-label">Prénom</label>
+						<label for="profile_prenom" class="col-sm-3 control-label">PrÃ©nom</label>
 						<div class="col-sm-9">
 							<p class="form-control-static" id="profile_prenom">
 						</div>
@@ -120,7 +125,7 @@
 					</div>
 					<fieldset disabled>
 					<div class="form-group">
-						<label for="profile_admin" class="col-sm-3 control-label">Rôle</label>
+						<label for="profile_admin" class="col-sm-3 control-label">RÃ©le</label>
 						<div class="col-sm-9">
 							<label>
 								<input type="checkbox" id="profile_admin"> Administrateur
@@ -190,9 +195,9 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="join_prenom" class="col-sm-3 control-label">Prénom</label>
+						<label for="join_prenom" class="col-sm-3 control-label">PrÃ©nom</label>
 						<div class="col-sm-9">
-							<input type="text" class="form-control" id="join_prenom" placeholder="Prénom" required>
+							<input type="text" class="form-control" id="join_prenom" placeholder="PrÃ©nom" required>
 							<span id="join_prenom_help" class="help-block"></span>
 						</div>
 					</div>
@@ -210,6 +215,7 @@
 	var session = 0;
 	var admin = false;
 	var username = "";
+	var liked = [];
 
 	function login() {
 		$(".onlogin").show();
@@ -246,10 +252,23 @@
 						success: function(r){
 							$.each(r.friends, function(i, f) {
 								$("#profile_friends").append("<option>" + f + "</option>");
+								$("#friends").append("<li>" + f + " <button class="friendsList" onclick="">Like</button>" + "</li>");
 							});
 						}
 					});
-
+					$.ajax({
+						type: "GET",
+						url: "${ app.path }/api/like",
+						dataType: "json",
+						data: {
+							session: session
+						},
+						success: function(r){
+							$.each(r.like, function(i, f) {
+								$("#friends").append("<li>" + f + " <button onclick="" >Like</button>" + "</li>");
+							});
+						}
+					});
 				}
 			}
 		});
@@ -290,7 +309,7 @@
 					admin = r.admin;
 					login();
 					Cookies.set('session', r);
-					popalert("info", "Vous êtes connecté.");
+					popalert("info", "Vous Ã©tes connectÃ©.");
 				} 
 				else {
 					popalert("danger", r.error, r.status);
@@ -314,7 +333,7 @@
 		logout();
 		session = 0;
 		Cookies.remove('session');
-		popalert("info", "Vous êtes déconnecté.");
+		popalert("info", "Vous Ã©tes dÃ©connectÃ©.");
 	});
 
 
@@ -332,7 +351,7 @@
 				if(r.username !== undefined)
 				{
 					$("#join_username").parent().parent().addClass("has-error");
-					$("#join_username_help").text("Ce nom d'utilisateur est déjà  pris.");
+					$("#join_username_help").text("Ce nom d'utilisateur est dÃ©jÃ© pris.");
 				}
 				else if($("#join_username").val().length > 255)
 				{
@@ -351,7 +370,7 @@
 	$("#join_password").on("change", function(){
 		if($("#join_password").val().length < 8){
 			$("#join_password").parent().parent().addClass("has-error").removeClass("has-success");
-			$("#join_password_help").text("Votre mot de passe doit faire au moins 8 caractères.");
+			$("#join_password_help").text("Votre mot de passe doit faire au moins 8 caractÃ©res.");
 		}
 		else if($("#join_password").val() > 255)
 		{
@@ -403,7 +422,7 @@
 		if($("#join_prenom").val().length > 255)
 		{
 			$("#join_prenom").parent().parent().addClass("has-error").removeClass("has-success");
-			$("#join_prenom_help").text("Ce prénom est trop long.");
+			$("#join_prenom_help").text("Ce prÃ©nom est trop long.");
 		}
 		else{
 			$("#join_prenom").parent().parent().removeClass("has-error").addClass("has-success");
@@ -426,7 +445,7 @@
 			success: function(r){
 				if(r.error === undefined)
 				{
-					popalert("success", "Votre inscription a bien été prise en compte !", "Félicitations");
+					popalert("success", "Votre inscription a bien Ã©tÃ© prise en compte !", "FÃ©licitations");
 				}
 				else
 					popalert("danger", r.error, r.status);
@@ -437,5 +456,9 @@
 		});
 		$("#join_modal").modal('hide');
 	});
+	
+	$(".friendsList").on("click", function (){
+		var friend = $(this).closest().text();
+	}
 
 </script>

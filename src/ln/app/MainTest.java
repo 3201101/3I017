@@ -50,7 +50,7 @@ public class MainTest {
 		o.put("test", "test2");
 		System.out.println(DBService.add("messages", o));*/
 		
-		System.out.println(MessagesService.get());
-		//System.out.println(MessagesService.add("Test", "Ceci est le tout premier message de l'application !").toString());
+		//System.out.println(UsersService.login("3201101", "password"));
+		System.out.println(MessagesService.add(-2102079032, "Test"));
 	}
 }

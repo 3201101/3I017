@@ -46,11 +46,11 @@ public final class AppSettings extends PageSettings
 	 */
 	public AppSettings()
 	{
-		root = "0ln";
+		root = "Ln";
 		name = "Ln";
 		titl = "Log À Rythmes";
-		atom = "http://li328.delfosia.net/";
-		//atom = "http://li328.lip6.fr/";
+		//atom = "http://li328.delfosia.net/";
+		atom = "http://li328.lip6.fr:8280/";
 		path = atom + root;
 	}
 
