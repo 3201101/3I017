@@ -135,6 +135,9 @@ En plus des améliorations d'ordre esthétique, JavaScript et jQuery nous permet
 
 Ce code, qui se trouve dans le fichier **WebContent/WEB-INF/inc/navbar.jsp**, est appelé lorsque le client valide un formulaire de connexion. On utilise Ajax pour effectuer une requête à l'[API](#api), puis on stocke le résultat dans des variables globales, mais aussi dans un cookie - ce qui permet d'éviter d'avoir à se reconnecter tout le temps. On appelle aussi la fonction ```login()```, définie plus haut dans le fichier, qui s'occupe elle de toute les effets visuels de la connexion.
 
+> Cette partie-là du projet est probablement la moins propre. Toutes les fonctions javascript requises ont été définies à la volée quand elles étaient nécessaires, et le code est réparti dans les fichiers JSP pour bénéficier des avantages de l'ExpressionLanguage de Java, bien que cela nuit à la compréhension du code et à une bonne vue d'ensemble du projet.
+> Pour ajouter plus de clareté, il faudrait centraliser tout le code Javascript dans un fichier dédié, y normaliser les noms de fonctions et de variables pour minimiser les sources d'erreurs, et enfin optimiser les appels de fonctions : actuellement, on observe occasionellement des bugs provoquant des multiples requêtes à l'API à des moments où une seule était voulue, par exemple.
+
 ## Données
 
 Mis à part les données statiques comme le texte des boutons et des éléments esthétiques apportés par les styles, le site web doit surtout afficher du contenu. Ces données, dans le cadre de ce projet, sont stockées dans deux bases de données : une de type MySQL, qui stocke les données des utilisateurs notamment, et une base MongoDB, plus adaptée à une éventuelle grande quantité de données à traiter, pour les messages postés.
